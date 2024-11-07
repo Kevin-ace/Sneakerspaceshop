@@ -3,127 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SneakerSpace | Premium Sneakers</title>
+    <title>Welcome to SneakerSpace | Premium Sneaker Store</title>
     <link rel="stylesheet" href="assets/css/styles.css">
-    <script src="assets/js/main.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    
+    <script src="assets/js/theme.js" defer></script>
+    <script src="assets/js/navigation.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
 </head>
 <body>
-    <nav>
+    <nav class="landing-nav">
         <div class="logo">SneakerSpace</div>
         <div class="nav-links">
-            <a href="#">Home</a>
-            <a href="#">Shop</a>
-            <a href="#">Categories</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
+            <a href="home.html" class="enter-store-btn">Enter Store</a>
+            <a href="#featured">Featured</a>
+        </div>
+        <div class="nav-icons">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
     </nav>
 
-    <section class="hero">
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1>Step Into Style</h1>
-            <p>Discover the latest sneaker trends and exclusive releases</p>
-            <button class="cta-button">Shop Now</button>
+            <h1>Step into <span class="highlight">Greatness</span></h1>
+            <p class="tagline">Kenya's Premier Sneaker Destination</p>
+            <div class="cta-buttons">
+                <a href="home.html" class="primary-btn">Enter Store</a>
+                <a href="#collection" class="secondary-btn">View Collection</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="rotating-sneaker">
+                <img src="assets/images/hero-sneaker.png" alt="Featured Sneaker">
+            </div>
+            <div class="floating-elements">
+                <span class="element">Premium Quality</span>
+                <span class="element">Authentic</span>
+                <span class="element">Latest Releases</span>
+            </div>
         </div>
     </section>
 
-    <section class="featured">
-        <h2>Featured Products</h2>
-        <div class="products">
-            <div class="product-card">
-                <img src="assets/images/aj8.jpeg" alt="Sneaker 1" class="product-image">
-                <div class="product-info">
-                    <div class="product-title">Air Jordan 8s</div>
-                    <div class="product-price">Ksh 6500</div>
+    <section id="featured" class="featured-section">
+        <h2>Featured Drops</h2>
+        <div class="featured-grid">
+            <div class="featured-card">
+                <div class="card-image">
+                    <img src="assets/images/aj8.jpeg" alt="Air Jordan 8s">
+                </div>
+                <div class="card-content">
+                    <h3>Air Jordan 8s</h3>
+                    <p>Limited Edition Release</p>
+                    <a href="home.html" class="view-btn">View in Store</a>
                 </div>
             </div>
-            <div class="product-card">
-                <img src="assets/images/airmax.jpeg" alt="Sneaker 2" class="product-image">
-                <div class="product-info">
-                    <div class="product-title">Air Max Supreme</div>
-                    <div class="product-price">Ksh 5000</div>
+            <!-- Add more featured cards -->
+        </div>
+    </section>
+
+    <section class="benefits-section">
+        <div class="benefits-container">
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-check-circle"></i>
                 </div>
-            </div>
-            <div class="product-card">
-                <img src="assets/images/aj14s.jpeg" alt="Sneaker 3" class="product-image">
-                <div class="product-info">
-                    <div class="product-title">Air Jordan 14s</div>
-                    <div class="product-price">Ksh 9000</div>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="assets/images/pegasus.jpeg" alt="Sneaker 4" class="product-image">
-                <div class="product-info">
-                    <div class="product-title">Nike Pegasus</div>
-                    <div class="product-price">KSh 4000</div>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="assets/images/aj.jpeg" alt="Sneaker 5" class="product-image">
-                <div class="product-info">
-                    <div class="product-title">Air Jordan 1s</div>
-                    <div class="product-price">KSh 4500</div>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="assets/images/conversesole.avif" alt="Sneaker 6" class="product-image">
-                <div class="product-info">
-                    <div class="product-title">Chuck Taylor All-Stars</div>
-                    <div class="product-price">KSh 5200</div>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="assets/images/Aj6s.jpg" alt="Sneaker 7" class="product-image">
-                <div class="product-info">
-                    <div class="product-title">Air Jordan 6s</div>
-                    <div class="product-price">KSh 5500</div>
-                </div>
+                <h3>Authenticity Guaranteed</h3>
+                <p>100% authentic products with verification</p>
             </div>
             
-            <div class="product-card">
-                <img src="assets/images/VansSk8-Hi.jpg" alt="Sneaker 8" class="product-image">
-                <div class="product-info">
-                    <div class="product-title">Vans Sk8 Hi</div>
-                    <div class="product-price">KSh 3500</div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-truck"></i>
                 </div>
+                <h3>Fast Delivery</h3>
+                <p>Nationwide delivery within 24-48 hours</p>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-undo"></i>
+                </div>
+                <h3>Easy Returns</h3>
+                <p>30-day hassle-free return policy</p>
             </div>
         </div>
     </section>
 
-    <section class="categories">
-        <h2>Shop By Category</h2>
-        <div class="category-grid">
-            <div class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-running"></i>
+    <section id="collection" class="collection-preview">
+        <h2>Collections</h2>
+        <div class="collection-grid">
+            <div class="collection-card">
+                <img src="assets/images/running-category.jpg" alt="Running Collection">
+                <div class="overlay">
+                    <h3>Running</h3>
+                    <a href="home.html" class="explore-btn">Explore</a>
                 </div>
-                <h3>Running</h3>
             </div>
-            <div class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-basketball-ball"></i>
-                </div>
-                <h3>Basketball</h3>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-tshirt"></i>
-                </div>
-                <h3>Lifestyle</h3>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-dumbbell"></i>
-                </div>
-                <h3>Training</h3>
-            </div>
+            <!-- Add more collection cards -->
         </div>
     </section>
 
-    <footer>
-        <p>&copy; 2024 SneakerSpace. All rights reserved.</p>
+    <section class="newsletter-section">
+        <div class="newsletter-content">
+            <h2>Stay in the Loop</h2>
+            <p>Subscribe for exclusive drops and special offers</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Your email address" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="landing-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SneakerSpace</h3>
+                <p>Your premier destination for authentic sneakers in Kenya.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="home.html">Enter Store</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p><i class="fas fa-map-marker-alt"></i> 123 Kimathi Street, Nairobi</p>
+                <p><i class="fas fa-phone"></i> +254 700 123 456</p>
+                <p><i class="fas fa-envelope"></i> info@sneakerspace.co.ke</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 SneakerSpace. All rights reserved.</p>
+        </div>
     </footer>
 </body>
 </html>

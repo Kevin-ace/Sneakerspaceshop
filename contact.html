@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | SneakerSpace</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="assets/js/theme.js" defer></script>
+    <script src="assets/js/navigation.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">SneakerSpace</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop</a>
+            <a href="categories.html">Categories</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="nav-icons">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section class="contact-hero">
+        <h1>Get in Touch</h1>
+        <p>We're here to help and answer any questions you might have</p>
+    </section>
+
+    <section class="contact-section">
+        <div class="contact-container">
+            <div class="contact-info">
+                <h2>Contact Information</h2>
+                <div class="info-items">
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="info-content">
+                            <h3>Visit Us</h3>
+                            <p>SneakerSpace Store</p>
+                            <p>123 Kimathi Street</p>
+                            <p>Nairobi, Kenya</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <div class="info-content">
+                            <h3>Call Us</h3>
+                            <p>Main: +254 700 123 456</p>
+                            <p>Support: +254 711 789 012</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div class="info-content">
+                            <h3>Email Us</h3>
+                            <p>info@sneakerspace.co.ke</p>
+                            <p>support@sneakerspace.co.ke</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <div class="info-content">
+                            <h3>Opening Hours</h3>
+                            <p>Monday - Friday: 9:00 AM - 8:00 PM</p>
+                            <p>Saturday: 10:00 AM - 6:00 PM</p>
+                            <p>Sunday: 12:00 PM - 5:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="social-links">
+                    <h3>Follow Us</h3>
+                    <div class="social-icons">
+                        <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form-container">
+                <h2>Send Us a Message</h2>
+                <form id="contactForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">Select a subject</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="order">Order Status</option>
+                            <option value="returns">Returns & Exchanges</option>
+                            <option value="support">Technical Support</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="map-section">
+        <h2>Find Us</h2>
+        <div class="map-container">
+            <!-- Replace with your actual Google Maps embed code -->
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.818769571661!2d36.81972!3d-1.284284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwMTcnMDMuNCJTIDM2wrA0OScxMS4wIkU!5e0!3m2!1sen!2ske!4v1234567890" 
+                width="100%" 
+                height="450" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy">
+            </iframe>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 SneakerSpace. All rights reserved.</p>
+    </footer>
+</body>
+</html> 

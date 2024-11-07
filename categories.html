@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories | SneakerSpace</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="assets/js/theme.js" defer></script>
+    <script src="assets/js/navigation.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">SneakerSpace</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop</a>
+            <a href="categories.html">Categories</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="nav-icons">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section class="categories-hero">
+        <h1>Browse Categories</h1>
+        <p>Find your perfect pair by category</p>
+    </section>
+
+    <section class="categories-grid">
+        <div class="category-card" data-category="running">
+            <div class="category-icon">
+                <i class="fas fa-running"></i>
+            </div>
+            <h3>Running</h3>
+            <p>Performance shoes for every runner</p>
+            <span class="item-count">12 Items</span>
+        </div>
+
+        <div class="category-card" data-category="basketball">
+            <div class="category-icon">
+                <i class="fas fa-basketball-ball"></i>
+            </div>
+            <h3>Basketball</h3>
+            <p>Court-ready sneakers for peak performance</p>
+            <span class="item-count">15 Items</span>
+        </div>
+
+        <div class="category-card" data-category="lifestyle">
+            <div class="category-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <h3>Lifestyle</h3>
+            <p>Casual comfort meets style</p>
+            <span class="item-count">20 Items</span>
+        </div>
+
+        <div class="category-card" data-category="training">
+            <div class="category-icon">
+                <i class="fas fa-dumbbell"></i>
+            </div>
+            <h3>Training</h3>
+            <p>Versatile shoes for any workout</p>
+            <span class="item-count">8 Items</span>
+        </div>
+    </section>
+
+    <section class="category-products" id="categoryProducts">
+        <div class="category-header">
+            <h2>Select a category to view products</h2>
+        </div>
+        <div class="products-grid">
+            <!-- Products will be loaded here dynamically -->
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 SneakerSpace. All rights reserved.</p>
+    </footer>
+</body>
+</html> 

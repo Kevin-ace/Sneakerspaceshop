@@ -7,6 +7,8 @@
     <title>Product Name | SneakerSpace</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="assets/js/theme.js" defer></script>
+    <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/main.js" defer></script>
 </head>
 <body>
@@ -14,11 +16,16 @@
     <nav>
         <div class="logo">SneakerSpace</div>
         <div class="nav-links">
-            <a href="#">Home</a>
-            <a href="#">Shop</a>
-            <a href="#">Categories</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop</a>
+            <a href="categories.html">Categories</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="nav-icons">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
     </nav>
 
@@ -86,4 +93,10 @@
                         <input type="number" value="1" min="1" max="10" class="quantity-input">
                         <button class="quantity-btn plus">+</button>
                     </div>
-                    <button class="add-to
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

@@ -6,51 +6,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop | SneakerSpace</title>
     <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="assets/js/theme.js" defer></script>
+    <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/main.js" defer></script>
 </head>
 <body>
     <nav>
         <div class="logo">SneakerSpace</div>
         <div class="nav-links">
-            <a href="#">Home</a>
-            <a href="#">Shop</a>
-            <a href="#">Categories</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop</a>
+            <a href="categories.html">Categories</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="nav-icons">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
     </nav>
 
-    <section class="shop-hero animate-on-scroll">
-        <h1>Our Collection</h1>
-        <div class="filter-buttons">
-            <button class="filter-button active" onclick="filterProducts('all')">All</button>
-            <button class="filter-button" onclick="filterProducts('running')">Running</button>
-            <button class="filter-button" onclick="filterProducts('basketball')">Basketball</button>
-            <button class="filter-button" onclick="filterProducts('lifestyle')">Lifestyle</button>
-            <button class="filter-button" onclick="filterProducts('training')">Training</button>
-        </div>
-    </section>
+    <section class="shop-container">
+        <aside class="shop-sidebar">
+            <div class="filter-section">
+                <h3>Filter By</h3>
+                <div class="filter-group">
+                    <h4>Categories</h4>
+                    <label><input type="checkbox" value="running"> Running</label>
+                    <label><input type="checkbox" value="basketball"> Basketball</label>
+                    <label><input type="checkbox" value="lifestyle"> Lifestyle</label>
+                    <label><input type="checkbox" value="training"> Training</label>
+                </div>
+                <div class="filter-group">
+                    <h4>Price Range</h4>
+                    <input type="range" class="price-slider" min="1000" max="100000" value="100000" step="1000">
+                    <div class="price-display">
+                        <span id="priceValue">100,000</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
 
-    <section class="products-grid animate-on-scroll">
-        <!-- Example of a product card with new features -->
-        <div class="product-card" data-category="running">
-            <div class="product-image-container">
-                <img src="/api/placeholder/300/200" alt="Running Sneaker" class="product-image">
-                <div class="product-overlay">
-                    <button onclick="addToCart(1, 'Speed Runner Pro', 199.99)" class="add-to-cart-btn">
-                        Add to Cart
-                    </button>
+        <main class="shop-main">
+            <div class="shop-header">
+                <h1>Our Collection</h1>
+                <div class="shop-controls">
+                    <select class="sort-select">
+                        <option value="featured">Featured</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="newest">Newest First</option>
+                    </select>
                 </div>
             </div>
-            <div class="product-info">
-                <div class="product-title">Speed Runner Pro</div>
-                <div class="product-price">$199.99</div>
-                <div class="product-rating">
-                    ★★★★☆ (4.2)
+
+            <div class="shelf-container">
+                <!-- Premium Shelf -->
+                <div class="shelf">
+                    <div class="shelf-label">
+                        <h2>Premium Collection</h2>
+                        <div class="shelf-accent"></div>
+                    </div>
+                    <div class="shelf-products">
+                        <div class="product-card" data-category="basketball">
+                            <div class="product-image-container">
+                                <img src="assets/images/aj8.jpeg" alt="Air Jordan 8s" class="product-image">
+                                <div class="product-overlay">
+                                    <button onclick="cart.add({id: 1, name: 'Air Jordan 8s', price: 6500, image: 'assets/images/aj8.jpeg'})" class="add-to-cart-btn">
+                                        Add to Cart
+                                    </button>
+                                    <a href="product-detail.html" class="view-details-btn">View Details</a>
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-title">Air Jordan 8s</div>
+                                <div class="product-price">Ksh 6500</div>
+                                <div class="product-rating">★★★★★ (5.0)</div>
+                            </div>
+                        </div>
+                        <!-- Add more premium products -->
+                    </div>
+                </div>
+
+                <!-- Running Shelf -->
+                <div class="shelf">
+                    <div class="shelf-label">
+                        <h2>Running Collection</h2>
+                        <div class="shelf-accent"></div>
+                    </div>
+                    <div class="shelf-products">
+                        <!-- Add running shoes -->
+                    </div>
+                </div>
+
+                <!-- Basketball Shelf -->
+                <div class="shelf">
+                    <div class="shelf-label">
+                        <h2>Basketball Collection</h2>
+                        <div class="shelf-accent"></div>
+                    </div>
+                    <div class="shelf-products">
+                        <!-- Add basketball shoes -->
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Add more product cards following this structure -->
+        </main>
     </section>
 
     <section class="size-guide animate-on-scroll">
