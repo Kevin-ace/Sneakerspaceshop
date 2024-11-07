@@ -94,7 +94,7 @@ nav {
 
 /* Hero Section */
 .hero {
-    background-image: url("../images/mainpage.webp");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url("../images/mainpage.webp");
     height: 100vh;
     background-repeat: no-repeat;
     background-size: cover;
@@ -1132,7 +1132,10 @@ footer {
     align-items: center;
     min-height: 80vh;
     padding: 2rem 5%;
-    background: linear-gradient(45deg, var(--secondary) 0%, #2c3e50 100%);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url("../images/mainpage.webp");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     color: white;
     overflow: hidden;
 }
