@@ -1,0 +1,89 @@
+<!-- product-detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Name | SneakerSpace</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">SneakerSpace</div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Shop</a>
+            <a href="#">Categories</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </div>
+    </nav>
+
+    <main class="product-detail-page">
+        <div class="product-container animate-on-scroll">
+            <div class="product-gallery">
+                <div class="main-image">
+                    <img src="/api/placeholder/600/400" alt="Product Main pic" id="main-image">
+                </div>
+                <div class="thumbnail-grid">
+                    <img src="/api/placeholder/150/100" alt="Thumbnail 1" class="thumbnail active">
+                    <img src="/api/placeholder/150/100" alt="Thumbnail 2" class="thumbnail">
+                    <img src="/api/placeholder/150/100" alt="Thumbnail 3" class="thumbnail">
+                    <img src="/api/placeholder/150/100" alt="Thumbnail 4" class="thumbnail">
+                </div>
+            </div>
+
+            <div class="product-info">
+                <h1 class="product-title">Ultra Boost Pro Max</h1>
+                <div class="product-meta">
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span>(4.5/5 - 128 reviews)</span>
+                    </div>
+                    <div class="product-sku">SKU: UB2024-001</div>
+                </div>
+
+                <div class="product-price">
+                    <span class="current-price">$199.99</span>
+                    <span class="original-price">$249.99</span>
+                    <span class="discount-badge">20% OFF</span>
+                </div>
+
+                <div class="product-options">
+                    <div class="size-selector">
+                        <h3>Select Size</h3>
+                        <div class="size-grid">
+                            <button class="size-option">US 7</button>
+                            <button class="size-option">US 8</button>
+                            <button class="size-option">US 9</button>
+                            <button class="size-option">US 10</button>
+                            <button class="size-option">US 11</button>
+                            <button class="size-option">US 12</button>
+                        </div>
+                    </div>
+
+                    <div class="color-selector">
+                        <h3>Select Color</h3>
+                        <div class="color-options">
+                            <button class="color-option" style="background-color: #000000;"></button>
+                            <button class="color-option" style="background-color: #FFFFFF;"></button>
+                            <button class="color-option" style="background-color: #FF0000;"></button>
+                            <button class="color-option" style="background-color: #0000FF;"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-actions">
+                    <div class="quantity-selector">
+                        <button class="quantity-btn minus">-</button>
+                        <input type="number" value="1" min="1" max="10" class="quantity-input">
+                        <button class="quantity-btn plus">+</button>
+                    </div>
+                    <button class="add-to

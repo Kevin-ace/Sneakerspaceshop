@@ -1,0 +1,67 @@
+<!-- shop.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop | SneakerSpace</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">SneakerSpace</div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Shop</a>
+            <a href="#">Categories</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </div>
+    </nav>
+
+    <section class="shop-hero animate-on-scroll">
+        <h1>Our Collection</h1>
+        <div class="filter-buttons">
+            <button class="filter-button active" onclick="filterProducts('all')">All</button>
+            <button class="filter-button" onclick="filterProducts('running')">Running</button>
+            <button class="filter-button" onclick="filterProducts('basketball')">Basketball</button>
+            <button class="filter-button" onclick="filterProducts('lifestyle')">Lifestyle</button>
+            <button class="filter-button" onclick="filterProducts('training')">Training</button>
+        </div>
+    </section>
+
+    <section class="products-grid animate-on-scroll">
+        <!-- Example of a product card with new features -->
+        <div class="product-card" data-category="running">
+            <div class="product-image-container">
+                <img src="/api/placeholder/300/200" alt="Running Sneaker" class="product-image">
+                <div class="product-overlay">
+                    <button onclick="addToCart(1, 'Speed Runner Pro', 199.99)" class="add-to-cart-btn">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+            <div class="product-info">
+                <div class="product-title">Speed Runner Pro</div>
+                <div class="product-price">$199.99</div>
+                <div class="product-rating">
+                    ★★★★☆ (4.2)
+                </div>
+            </div>
+        </div>
+        <!-- Add more product cards following this structure -->
+    </section>
+
+    <section class="size-guide animate-on-scroll">
+        <h2>Size Guide</h2>
+        <div class="size-chart">
+            <!-- Add size chart content -->
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 SneakerSpace. All rights reserved.</p>
+    </footer>
+</body>
+</html>
