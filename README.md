@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SneakerSpace
 https://kevin-ace.github.io/Sneakerspaceshop/
 
@@ -119,4 +120,6 @@ from landing.css
 
 © 2024 Kevin | All rights reserved.
 ```# Sneakerspaceshop
+=======
+>>>>>>> b8082db (SneakerSpace initial design)
 # Sneakerspaceshop
