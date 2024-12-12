@@ -1,160 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home | SneakerSpace</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="assets/js/theme.js" defer></script>
     <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/main.js" defer></script>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Using the store navigation -->
     <nav class="store-nav">
-        <div class="logo">
-            <a href="home.html">SneakerSpace</a>
+      <div class="logo">
+        <a href="home.html">SneakerSpace</a>
+      </div>
+      <div class="nav-links">
+        <a href="home.html" class="nav-link active">Home</a>
+        <a href="shop.html" class="nav-link">Shop</a>
+        <a href="categories.html" class="nav-link">Categories</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </div>
+      <div class="nav-icons">
+        <div class="search-bar">
+          <input type="text" placeholder="Search products..." />
+          <button><i class="fas fa-search"></i></button>
         </div>
-        <div class="nav-links">
-            <a href="home.html" class="nav-link active">Home</a>
-            <a href="shop.html" class="nav-link">Shop</a>
-            <a href="categories.html" class="nav-link">Categories</a>
-            <a href="about.html" class="nav-link">About</a>
-            <a href="contact.html" class="nav-link">Contact</a>
-        </div>
-        <div class="nav-icons">
-            <div class="search-bar">
-                <input type="text" placeholder="Search products...">
-                <button><i class="fas fa-search"></i></button>
-            </div>
-            <a href="#" class="cart-icon" id="cartToggle">
-                <i class="fas fa-shopping-cart"></i>
-            </a>
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                <i class="fas fa-moon"></i>
-            </button>
-        </div>
+        <a href="#" class="cart-icon" id="cartToggle">
+          <i class="fas fa-shopping-cart"></i>
+        </a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
     </nav>
 
     <section class="store-hero">
-        <div class="hero-slider">
-            <div class="slide active">
-                <img src="assets/images/conversesole.avif" alt="New Arrivals">
-                <div class="slide-content">
-                    <h2>New Arrivals</h2>
-                    <p>Discover the latest sneaker drops</p>
-                    <a href="shop.html" class="shop-now-btn">Shop Now</a>
-                </div>
-            </div>
+      <div class="hero-slider">
+        <div class="slide active">
+          <img src="assets/images/conversesole.avif" alt="New Arrivals" />
+          <div class="slide-content">
+            <h2>New Arrivals</h2>
+            <p>Discover the latest sneaker drops</p>
+            <a href="shop.html" class="shop-now-btn">Shop Now</a>
+          </div>
         </div>
-        <div class="slider-controls">
-            <button class="prev-slide"><i class="fas fa-chevron-left"></i></button>
-            <button class="next-slide"><i class="fas fa-chevron-right"></i></button>
-        </div>
+      </div>
+      <div class="slider-controls">
+        <button class="prev-slide"><i class="fas fa-chevron-left"></i></button>
+        <button class="next-slide"><i class="fas fa-chevron-right"></i></button>
+      </div>
     </section>
 
     <section class="featured-categories">
-        <h2>Popular Categories</h2>
-        <div class="category-cards">
-            <div class="category-card">
-                <img src="assets/images/pegasus.jpeg" alt="Running">
-                <div class="category-info">
-                    <h3>Running</h3>
-                    <p>20+ Products</p>
-                    <a href="categories.html" class="view-category">Explore</a>
-                </div>
-            </div>
-            <div class="category-card">
-                <img src="assets/images/aj1s.jpeg" alt="Running">
-                <div class="category-info">
-                    <h3>Basketball</h3>
-                    <p>20+ Products</p>
-                    <a href="categories.html" class="view-category">Explore</a>
-                </div>
-            </div>
-            <!-- Add more category cards -->
+      <h2>Popular Categories</h2>
+      <div class="category-cards">
+        <div class="category-card">
+          <img src="assets/images/pegasus.jpeg" alt="Running" />
+          <div class="category-info">
+            <h3>Running</h3>
+            <p>20+ Products</p>
+            <a href="categories.html" class="view-category">Explore</a>
+          </div>
         </div>
+        <div class="category-card">
+          <img src="assets/images/aj1s.jpeg" alt="Running" />
+          <div class="category-info">
+            <h3>Basketball</h3>
+            <p>20+ Products</p>
+            <a href="categories.html" class="view-category">Explore</a>
+          </div>
+        </div>
+        <!-- Add more category cards -->
+      </div>
     </section>
 
     <section class="trending-products">
+      <div class="category-card">
         <div class="section-header">
-            <h2>Trending Now</h2>
-            <a href="shop.html" class="view-all">View All</a>
+          <h2>Trending Now</h2>
+          <a href="shop.html" class="view-all">View All</a>
         </div>
         <div class="products-grid">
-            <!-- Products will be loaded dynamically from main.js -->
+          <!-- Products will be loaded dynamically from main.js -->
         </div>
+      </div>
     </section>
 
     <section class="special-offer">
+      <div class="category-card">
         <div class="offer-content">
-            <h2>Special Offer</h2>
-            <p>Get 20% off on selected items</p>
-            <div class="countdown">
-                <div class="countdown-item">
-                    <span class="number">02</span>
-                    <span class="label">Days</span>
-                </div>
-                <!-- Add more countdown items -->
+          <h2>Special Offer</h2>
+          <p>Get 20% off on selected items</p>
+          <div class="countdown">
+            <div class="countdown-item">
+              <span class="number">02</span>
+              <span class="label">Days</span>
             </div>
-            <a href="shop.html" class="offer-btn">Shop Now</a>
+            <!-- Add more countdown items -->
+          </div>
+          <a href="shop.html" class="offer-btn">Shop Now</a>
         </div>
+      </div>
     </section>
 
     <section class="new-arrivals">
+      <div class="category-card">
         <div class="section-header">
-            <h2>New Arrivals</h2>
-            <a href="shop.html" class="view-all">View All</a>
+          <h2>New Arrivals</h2>
+          <a href="shop.html" class="view-all">View All</a>
         </div>
         <div class="products-slider">
-            <!-- Products will be loaded dynamically -->
+          <!-- Products will be loaded dynamically -->
         </div>
+      </div>
     </section>
 
     <section class="features-banner">
+      <div class="category-card">
         <div class="feature">
-            <i class="fas fa-truck"></i>
-            <h3>Free Shipping</h3>
-            <p>On orders above Ksh 5000</p>
+          <i class="fas fa-truck"></i>
+          <h3>Free Shipping</h3>
+          <p>On orders above Ksh 5000</p>
         </div>
-        <!-- Add more features -->
+      </div>
+      <!-- Add more features -->
     </section>
 
     <!-- Include the cart sidebar -->
     <div class="cart-sidebar" id="cartSidebar">
-        <!-- Cart content from navigation.js -->
+      <!-- Cart content from navigation.js -->
     </div>
 
     <footer class="landing-footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>SneakerSpace</h3>
-                <p>Your premier destination for authentic sneakers in Kenya.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                </div>
-            </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="home.html">Enter Store</a></li>
-                    <li><a href="#about">About Us</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <p><i class="fas fa-map-marker-alt"></i> 123 Kimathi Street, Nairobi</p>
-                <p><i class="fas fa-phone"></i> +254 700 123 456</p>
-                <p><i class="fas fa-envelope"></i> info@sneakerspace.co.ke</p>
-            </div>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>SneakerSpace</h3>
+          <p>Your premier destination for authentic sneakers in Kenya.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 SneakerSpace. All rights reserved.</p>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="home.html">Enter Store</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
         </div>
+        <div class="footer-section">
+          <h3>Contact</h3>
+          <p>
+            <i class="fas fa-map-marker-alt"></i> 123 Kimathi Street, Nairobi
+          </p>
+          <p><i class="fas fa-phone"></i> +254 700 123 456</p>
+          <p><i class="fas fa-envelope"></i> info@sneakerspace.co.ke</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SneakerSpace. All rights reserved.</p>
+      </div>
     </footer>
-</body>
-</html> 
+  </body>
+</html>

@@ -1,168 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Welcome to SneakerSpace | Premium Sneaker Store</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/landing.css">
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="assets/css/landing.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="assets/js/theme.js" defer></script>
     <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/main.js" defer></script>
-</head>
-<body>
+  </head>
+  <body>
     <nav class="landing-nav">
-        <div class="logo">SneakerSpace</div>
-        <div class="nav-links">
-            <a href="home.html" class="enter-store-btn">Enter Store</a>
-            <a href="#featured">Featured</a>
-        </div>
-        <div class="nav-icons">
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                <i class="fas fa-moon"></i>
-            </button>
-        </div>
+      <div class="logo">SneakerSpace</div>
+      <div class="nav-links">
+        <a href="home.html" class="enter-store-btn">Enter Store</a>
+        <a href="#featured">Featured</a>
+      </div>
+      <div class="nav-icons">
+        <button class="cart-toggle" id="cartToggle" aria-label="Shopping cart">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count">0</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
     </nav>
 
     <section class="hero-section">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1>Step into <span class="highlight">Greatness</span></h1>
-            <p class="tagline">Kenya's <span class ="highlight">Premier</span> Sneaker Destination</p>
-            <div class="cta-buttons">
-                <a href="home.html" class="primary-btn">Enter Store</a>
-                <a href="#collection" class="secondary-btn">View Collection</a>
-            </div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>Step into <span class="highlight">Greatness</span></h1>
+        <p class="tagline">
+          Kenya's <span class="highlight">Premier</span> Sneaker Destination
+        </p>
+        <div class="cta-buttons">
+          <a href="home.html" class="primary-btn">Enter Store</a>
+          <a href="#collection" class="secondary-btn">View Collection</a>
         </div>
-        <div class="hero-visual">
-            <div class="rotating-sneaker">
-                <img src="assets/images/hero-sneaker.png" alt="Featured Sneaker" width="500" height="500">
-            </div>
-            <div class="floating-elements">
-                <span class="element">Premium Quality</span>
-                <span class="element">Authentic</span>
-                <span class="element">Latest Releases</span>
-            </div>
+      </div>
+      <div class="hero-visual">
+        <div class="rotating-sneaker">
+          <img
+            src="assets/images/hero-sneaker.png"
+            alt="Featured Sneaker"
+            width="500"
+            height="500"
+          />
         </div>
+        <div class="floating-elements">
+          <span class="element">Premium Quality</span>
+          <span class="element">Authentic</span>
+          <span class="element">Latest Releases</span>
+        </div>
+      </div>
     </section>
 
     <section id="featured" class="featured-section">
-        <h2>Featured Drops</h2>
-        <div class="featured-grid">
-            <div class="featured-card">
-                <div class="card-image">
-                    <img src="assets/images/aj8.jpeg" alt="Air Jordan 8s">
-                </div>
-                <div class="card-content">
-                    <h3>Air Jordan 8s</h3>
-                    <p>Limited Edition Release</p>
-                    <a href="home.html" class="view-btn">View in Store</a>
-                </div>
-            </div>
-            <div class="featured-card">
-                <div class="card-image">
-                    <img src="assets/images/Timberlandslv.jpeg" alt="Loui Vuitton TimberLand boots">
-                </div>
-                <div class="card-content">
-                    <h3>Loui Vuitton TimberLand boot</h3>
-                    <p>Limited Edition Release</p>
-                    <a href="home.html" class="view-btn">View in Store</a>
-                </div>
-            </div>
-            <!-- Add more featured cards -->
+      <h2>Featured Drops</h2>
+      <div class="featured-grid">
+        <div class="featured-card">
+          <div class="card-image">
+            <img src="assets/images/aj8.jpeg" alt="Air Jordan 8s" />
+          </div>
+          <div class="card-content">
+            <h3>Air Jordan 8s</h3>
+            <p>Limited Edition Release</p>
+            <a href="home.html" class="view-btn">View in Store</a>
+          </div>
         </div>
-    </section>
-
-    <section class="benefits-section">
-        <div class="benefits-container">
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <h3>Authenticity Guaranteed</h3>
-                <p>100% authentic products with verification</p>
-            </div>
-            
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <i class="fas fa-truck"></i>
-                </div>
-                <h3>Fast Delivery</h3>
-                <p>Nationwide delivery within 24-48 hours</p>
-            </div>
-            
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <i class="fas fa-undo"></i>
-                </div>
-                <h3>Easy Returns</h3>
-                <p>30-day hassle-free return policy</p>
-            </div>
+        <div class="featured-card">
+          <div class="card-image">
+            <img
+              src="assets/images/Timberlandslv.jpeg"
+              alt="Loui Vuitton TimberLand boots"
+            />
+          </div>
+          <div class="card-content">
+            <h3>Loui Vuitton TimberLand boot</h3>
+            <p>Limited Edition Release</p>
+            <a href="home.html" class="view-btn">View in Store</a>
+          </div>
         </div>
+        <!-- Add more featured cards -->
+      </div>
     </section>
 
     <section id="collection" class="collection-preview">
-        <h2>Collections</h2>
-        <div class="collection-grid">
-            <div class="collection-card">
-                <img src="assets/images/running-category.jpg" alt="Running Collection" width="400" height="300">
-                <div class="overlay">
-                    <h3>Running</h3>
-                    <a href="home.html" class="explore-btn">Explore</a>
-                </div>
-            </div>
-            <div class="collection-card">
-                <img src="assets/images/VansSk8-Hi.jpg" alt="Casual Collection" width="400" height="500">
-                <div class="overlay">
-                    <h3>Casual</h3>
-                    <a href="home.html" class="explore-btn">Explore</a>
-                </div>
-            </div>
-            <!-- Add more collection cards -->
+      <h2>Collections</h2>
+      <div class="collection-grid">
+        <div class="collection-card">
+          <img
+            src="assets/images/running-category.jpg"
+            alt="Running Collection"
+            width="400"
+            height="300"
+          />
+          <div class="overlay">
+            <h3>Running</h3>
+            <a href="home.html" class="explore-btn">Explore</a>
+          </div>
         </div>
+        <div class="collection-card">
+          <img
+            src="assets/images/VansSk8-Hi.jpg"
+            alt="Casual Collection"
+            width="400"
+            height="500"
+          />
+          <div class="overlay">
+            <h3>Casual</h3>
+            <a href="home.html" class="explore-btn">Explore</a>
+          </div>
+        </div>
+        <!-- Add more collection cards -->
+      </div>
+    </section>
+
+    <section class="benefits-section">
+      <div class="benefits-container">
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h3>Authenticity Guaranteed</h3>
+          <p>100% authentic products with verification</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <i class="fas fa-truck"></i>
+          </div>
+          <h3>Fast Delivery</h3>
+          <p>Nationwide delivery within 24-48 hours</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <i class="fas fa-undo"></i>
+          </div>
+          <h3>Easy Returns</h3>
+          <p>30-day hassle-free return policy</p>
+        </div>
+      </div>
     </section>
 
     <section class="newsletter-section">
-        <div class="newsletter-content">
-            <h2>Stay in the Loop</h2>
-            <p>Subscribe for exclusive drops and special offers</p>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Your email address" required>
-                <button type="submit">Subscribe</button>
-            </form>
-        </div>
+      <div class="newsletter-content">
+        <h2>Stay in the Loop</h2>
+        <p>Subscribe for exclusive drops and special offers</p>
+        <form class="newsletter-form">
+          <input type="email" placeholder="Your email address" required />
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
     </section>
 
     <footer class="landing-footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>SneakerSpace</h3>
-                <p>Your premier destination for authentic sneakers in Kenya.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                </div>
-            </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="home.html">Enter Store</a></li>
-                    <li><a href="#about">About Us</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <p><i class="fas fa-map-marker-alt"></i> 123 Kimathi Street, Nairobi</p>
-                <p><i class="fas fa-phone"></i> +254 700 123 456</p>
-                <p><i class="fas fa-envelope"></i> info@sneakerspace.co.ke</p>
-            </div>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>SneakerSpace</h3>
+          <p>Your premier destination for authentic sneakers in Kenya.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 SneakerSpace. All rights reserved.</p>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="home.html">Enter Store</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
         </div>
+        <div class="footer-section">
+          <h3>Contact</h3>
+          <p>
+            <i class="fas fa-map-marker-alt"></i> 123 Kimathi Street, Nairobi
+          </p>
+          <p><i class="fas fa-phone"></i> +254 700 123 456</p>
+          <p><i class="fas fa-envelope"></i> info@sneakerspace.co.ke</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SneakerSpace. All rights reserved.</p>
+      </div>
     </footer>
-</body>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+      <div class="cart-header">
+        <h3>Your Cart</h3>
+        <button class="close-cart" id="closeCart">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="cart-items" id="cartItems">
+        <!-- Cart items will be dynamically added here -->
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total:</span>
+          <span class="total-amount">KSh 0.00</span>
+        </div>
+        <button class="checkout-btn" id="checkoutBtn">
+          Proceed to Checkout
+        </button>
+      </div>
+    </div>
+  </body>
 </html>
