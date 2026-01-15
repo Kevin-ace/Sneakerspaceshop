@@ -1,26 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us | SneakerSpace</title>
+    <title>About Us | SneakerSpace - Our Story</title>
+    <meta name="description"
+        content="Learn about SneakerSpace, Kenya's premier destination for authentic sneakers since 2020.">
     <link rel="stylesheet" href="assets/css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="assets/js/api.js" defer></script>
     <script src="assets/js/theme.js" defer></script>
     <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/main.js" defer></script>
 </head>
+
 <body>
-    <nav>
-        <div class="logo">SneakerSpace</div>
+    <!-- Store Navigation -->
+    <nav class="store-nav">
+        <div class="logo">
+            <a href="home.html">SneakerSpace</a>
+        </div>
         <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="shop.html">Shop</a>
-            <a href="categories.html">Categories</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
+            <a href="home.html" class="nav-link">Home</a>
+            <a href="shop.html" class="nav-link">Shop</a>
+            <a href="categories.html" class="nav-link">Categories</a>
+            <a href="about.html" class="nav-link active">About</a>
+            <a href="contact.html" class="nav-link">Contact</a>
         </div>
         <div class="nav-icons">
+            <button class="cart-toggle" id="cartToggle" aria-label="Shopping cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </button>
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
                 <i class="fas fa-moon"></i>
             </button>
@@ -41,7 +53,11 @@
             </div>
             <div class="story-content">
                 <h2>The SneakerSpace Journey</h2>
-                <p>Founded in 2020, SneakerSpace emerged from a simple passion: bringing premium sneakers to enthusiasts who appreciate both style and quality. What started as a small online store has grown into Kenya's leading destination for authentic sneakers.</p>
+                <p>Founded in 2020, SneakerSpace emerged from a simple passion: bringing premium sneakers to enthusiasts
+                    who appreciate both style and quality. What started as a small online store has grown into Kenya's
+                    leading destination for authentic sneakers.</p>
+                <p>We believe that everyone deserves access to genuine, high-quality footwear. That's why we've built
+                    relationships with top brands worldwide to bring you the latest releases and classic favorites.</p>
                 <div class="achievement-grid">
                     <div class="achievement">
                         <span class="number">10K+</span>
@@ -63,22 +79,22 @@
     <section class="about-values">
         <h2>What Sets Us Apart</h2>
         <div class="values-grid">
-            <div class="value-card">
+            <div class="value-card animate-on-scroll">
                 <i class="fas fa-certificate"></i>
                 <h3>Authenticity Guaranteed</h3>
                 <p>Every pair is verified for authenticity before reaching your doorstep.</p>
             </div>
-            <div class="value-card">
+            <div class="value-card animate-on-scroll">
                 <i class="fas fa-truck"></i>
                 <h3>Fast Delivery</h3>
                 <p>Nationwide delivery within 24-48 hours of order confirmation.</p>
             </div>
-            <div class="value-card">
+            <div class="value-card animate-on-scroll">
                 <i class="fas fa-hand-holding-heart"></i>
                 <h3>Customer First</h3>
                 <p>Dedicated support team available 24/7 to assist you.</p>
             </div>
-            <div class="value-card">
+            <div class="value-card animate-on-scroll">
                 <i class="fas fa-exchange-alt"></i>
                 <h3>Easy Returns</h3>
                 <p>30-day hassle-free return policy for your peace of mind.</p>
@@ -89,18 +105,17 @@
     <section class="team-section">
         <h2>Meet Our Team</h2>
         <div class="team-grid">
-            <div class="team-member">
+            <div class="team-member animate-on-scroll">
                 <div class="member-image">
-                    <img src="assets/images/team-1.jpg" alt="Team Member">
+                    <img src="assets/images/team-1.jpg" alt="Kevin Kipruto - Founder & CEO">
                 </div>
                 <h3>Kevin Kipruto</h3>
                 <p>Founder & CEO</p>
                 <div class="social-links">
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
                 </div>
             </div>
-            <!-- Add more team members -->
         </div>
     </section>
 
@@ -111,12 +126,61 @@
             <img src="assets/images/adidas-logo.png" alt="Adidas">
             <img src="assets/images/jordan-logo.png" alt="Jordan">
             <img src="assets/images/puma-logo.png" alt="Puma">
-            <!-- Add more brand logos -->
         </div>
     </section>
 
-    <footer>
-        <p>&copy; 2024 SneakerSpace. All rights reserved.</p>
+    <!-- Enhanced Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-bag"></i> Your Cart</h3>
+            <button class="close-cart" id="closeCart" aria-label="Close cart">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="total-amount">Ksh 0</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">
+                <i class="fas fa-lock"></i> Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SneakerSpace</h3>
+                <p>Your premier destination for authentic sneakers in Kenya.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p><i class="fas fa-map-marker-alt"></i> 123 Kimathi Street, Nairobi</p>
+                <p><i class="fas fa-phone"></i> +254 113772133</p>
+                <p><i class="fas fa-envelope"></i> info@sneakerspace.co.ke</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 SneakerSpace. All rights reserved.</p>
+        </div>
     </footer>
 </body>
-</html> 
+
+</html>

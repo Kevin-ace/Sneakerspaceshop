@@ -1,102 +1,244 @@
 <!-- product-detail.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Name | SneakerSpace</title>
+    <title>Product Details | SneakerSpace</title>
+    <meta name="description" content="View product details and add to cart at SneakerSpace.">
     <link rel="stylesheet" href="assets/css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="assets/js/api.js" defer></script>
     <script src="assets/js/theme.js" defer></script>
     <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/main.js" defer></script>
 </head>
+
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="logo">SneakerSpace</div>
+    <!-- Store Navigation -->
+    <nav class="store-nav">
+        <div class="logo">
+            <a href="home.html">SneakerSpace</a>
+        </div>
         <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="shop.html">Shop</a>
-            <a href="categories.html">Categories</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
+            <a href="home.html" class="nav-link">Home</a>
+            <a href="shop.html" class="nav-link">Shop</a>
+            <a href="categories.html" class="nav-link">Categories</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="contact.html" class="nav-link">Contact</a>
         </div>
         <div class="nav-icons">
+            <button class="cart-toggle" id="cartToggle" aria-label="Shopping cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </button>
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
                 <i class="fas fa-moon"></i>
             </button>
         </div>
     </nav>
 
-    <main class="product-detail-page">
+    <main class="product-detail-page" style="margin-top: 100px; padding: 2rem 5%;">
         <div class="product-container animate-on-scroll">
             <div class="product-gallery">
                 <div class="main-image">
-                    <img src="/api/placeholder/600/400" alt="Product Main pic" id="main-image">
+                    <img src="assets/images/hero-sneaker.png" alt="Product Image" id="main-image">
                 </div>
                 <div class="thumbnail-grid">
-                    <img src="/api/placeholder/150/100" alt="Thumbnail 1" class="thumbnail active">
-                    <img src="/api/placeholder/150/100" alt="Thumbnail 2" class="thumbnail">
-                    <img src="/api/placeholder/150/100" alt="Thumbnail 3" class="thumbnail">
-                    <img src="/api/placeholder/150/100" alt="Thumbnail 4" class="thumbnail">
+                    <img src="assets/images/hero-sneaker.png" alt="Thumbnail 1" class="thumbnail active">
                 </div>
             </div>
 
             <div class="product-info">
-                <h1 class="product-title">Ultra Boost Pro Max</h1>
+                <div class="breadcrumb" style="margin-bottom: 1rem; color: var(--text-secondary);">
+                    <a href="home.html">Home</a> / <a href="shop.html">Shop</a> / <span id="productName">Product</span>
+                </div>
+                <h1 class="product-title" id="productTitle">Loading...</h1>
                 <div class="product-meta">
                     <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
+                        <i class="fas fa-star" style="color: #f1c40f;"></i>
+                        <i class="fas fa-star" style="color: #f1c40f;"></i>
+                        <i class="fas fa-star" style="color: #f1c40f;"></i>
+                        <i class="fas fa-star" style="color: #f1c40f;"></i>
+                        <i class="fas fa-star-half-alt" style="color: #f1c40f;"></i>
                         <span>(4.5/5 - 128 reviews)</span>
                     </div>
-                    <div class="product-sku">SKU: UB2024-001</div>
+                    <div class="product-category-badge" id="productCategory"
+                        style="display: inline-block; background: var(--surface); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; margin-top: 0.5rem;">
+                    </div>
                 </div>
 
-                <div class="product-price">
-                    <span class="current-price">$199.99</span>
-                    <span class="original-price">$249.99</span>
-                    <span class="discount-badge">20% OFF</span>
+                <p class="product-description" id="productDescription"
+                    style="margin: 1.5rem 0; line-height: 1.8; color: var(--text-secondary);"></p>
+
+                <div class="product-price" style="margin: 1.5rem 0;">
+                    <span class="current-price" id="productPrice"
+                        style="font-size: 2rem; font-weight: 700; color: var(--primary);">Ksh 0</span>
                 </div>
 
-                <div class="product-options">
+                <div class="product-options" style="margin: 2rem 0;">
                     <div class="size-selector">
-                        <h3>Select Size</h3>
-                        <div class="size-grid">
-                            <button class="size-option">US 7</button>
-                            <button class="size-option">US 8</button>
-                            <button class="size-option">US 9</button>
-                            <button class="size-option">US 10</button>
-                            <button class="size-option">US 11</button>
-                            <button class="size-option">US 12</button>
+                        <h3 style="margin-bottom: 1rem;">Select Size</h3>
+                        <div class="sizes">
+                            <button class="size-btn"
+                                onclick="this.parentElement.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));this.classList.add('selected')">38</button>
+                            <button class="size-btn"
+                                onclick="this.parentElement.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));this.classList.add('selected')">39</button>
+                            <button class="size-btn"
+                                onclick="this.parentElement.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));this.classList.add('selected')">40</button>
+                            <button class="size-btn"
+                                onclick="this.parentElement.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));this.classList.add('selected')">41</button>
+                            <button class="size-btn"
+                                onclick="this.parentElement.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));this.classList.add('selected')">42</button>
+                            <button class="size-btn"
+                                onclick="this.parentElement.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));this.classList.add('selected')">43</button>
+                            <button class="size-btn"
+                                onclick="this.parentElement.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));this.classList.add('selected')">44</button>
+                            <button class="size-btn"
+                                onclick="this.parentElement.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));this.classList.add('selected')">45</button>
                         </div>
                     </div>
 
-                    <div class="color-selector">
-                        <h3>Select Color</h3>
-                        <div class="color-options">
-                            <button class="color-option" style="background-color: #000000;"></button>
-                            <button class="color-option" style="background-color: #FFFFFF;"></button>
-                            <button class="color-option" style="background-color: #FF0000;"></button>
-                            <button class="color-option" style="background-color: #0000FF;"></button>
+                    <div class="quantity-selector" style="margin-top: 1.5rem;">
+                        <h3 style="margin-bottom: 1rem;">Quantity</h3>
+                        <div class="quantity-controls">
+                            <button onclick="updateQty(-1)">-</button>
+                            <span id="qty">1</span>
+                            <button onclick="updateQty(1)">+</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="product-actions">
-                    <div class="quantity-selector">
-                        <button class="quantity-btn minus">-</button>
-                        <input type="number" value="1" min="1" max="10" class="quantity-input">
-                        <button class="quantity-btn plus">+</button>
+                <div class="product-actions" style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button class="add-to-cart-large" id="addToCartBtn" style="flex: 1;">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                    <button class="wishlist-btn"
+                        style="width: 50px; height: 50px; border-radius: 12px; background: var(--surface); border: 1px solid var(--border-color);">
+                        <i class="far fa-heart" style="color: #e74c3c;"></i>
+                    </button>
+                </div>
+
+                <div class="product-features"
+                    style="margin-top: 2rem; padding: 1.5rem; background: var(--surface); border-radius: 12px;">
+                    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-truck" style="color: var(--primary);"></i>
+                            <span>Free Shipping</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-shield-alt" style="color: var(--primary);"></i>
+                            <span>Authentic Guaranteed</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-undo" style="color: var(--primary);"></i>
+                            <span>30-Day Returns</span>
+                        </div>
                     </div>
-                    <button class="add-to-cart">Add to Cart</button>
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- Enhanced Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-bag"></i> Your Cart</h3>
+            <button class="close-cart" id="closeCart" aria-label="Close cart">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="total-amount">Ksh 0</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">
+                <i class="fas fa-lock"></i> Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SneakerSpace</h3>
+                <p>Your premier destination for authentic sneakers in Kenya.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p><i class="fas fa-map-marker-alt"></i> 123 Kimathi Street, Nairobi</p>
+                <p><i class="fas fa-phone"></i> +254 113772133</p>
+                <p><i class="fas fa-envelope"></i> info@sneakerspace.co.ke</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 SneakerSpace. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentProduct = null;
+        let quantity = 1;
+
+        function updateQty(change) {
+            quantity = Math.max(1, Math.min(10, quantity + change));
+            document.getElementById('qty').textContent = quantity;
+        }
+
+        // Load product from URL parameter
+        async function loadProduct() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            if (productId && typeof API !== 'undefined') {
+                currentProduct = await API.getProductById(productId);
+
+                if (currentProduct) {
+                    document.getElementById('productTitle').textContent = currentProduct.name;
+                    document.getElementById('productName').textContent = currentProduct.name;
+                    document.getElementById('productDescription').textContent = currentProduct.description || 'Premium quality sneakers for your collection. Authentic and verified.';
+                    document.getElementById('productPrice').textContent = `Ksh ${currentProduct.price.toLocaleString()}`;
+                    document.getElementById('productCategory').textContent = currentProduct.category;
+                    document.getElementById('main-image').src = currentProduct.image_url || 'assets/images/hero-sneaker.png';
+                    document.title = `${currentProduct.name} | SneakerSpace`;
+                }
+            }
+        }
+
+        // Add to cart handler
+        document.getElementById('addToCartBtn').addEventListener('click', () => {
+            if (currentProduct && typeof cart !== 'undefined') {
+                for (let i = 0; i < quantity; i++) {
+                    cart.add({
+                        id: currentProduct.id,
+                        name: currentProduct.name,
+                        price: currentProduct.price,
+                        image: currentProduct.image_url || 'assets/images/hero-sneaker.png'
+                    });
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', loadProduct);
+    </script>
 </body>
+
 </html>

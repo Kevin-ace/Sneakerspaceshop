@@ -12,7 +12,6 @@ bp = Blueprint('main', __name__)
 # app = current_app
 
 ### PUBLIC ROUTES ###
-# Change all @app.route decorators to @bp.route
 @bp.route('/')
 def home():
     products = Product.query.all()

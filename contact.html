@@ -1,26 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us | SneakerSpace</title>
+    <meta name="description"
+        content="Get in touch with SneakerSpace. We're here to help with any questions about your order or our products.">
     <link rel="stylesheet" href="assets/css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="assets/js/api.js" defer></script>
     <script src="assets/js/theme.js" defer></script>
     <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/main.js" defer></script>
 </head>
+
 <body>
-    <nav>
-        <div class="logo">SneakerSpace</div>
+    <!-- Store Navigation -->
+    <nav class="store-nav">
+        <div class="logo">
+            <a href="home.html">SneakerSpace</a>
+        </div>
         <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="shop.html">Shop</a>
-            <a href="categories.html">Categories</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
+            <a href="home.html" class="nav-link">Home</a>
+            <a href="shop.html" class="nav-link">Shop</a>
+            <a href="categories.html" class="nav-link">Categories</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="contact.html" class="nav-link active">Contact</a>
         </div>
         <div class="nav-icons">
+            <button class="cart-toggle" id="cartToggle" aria-label="Shopping cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </button>
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
                 <i class="fas fa-moon"></i>
             </button>
@@ -51,7 +63,7 @@
                         <i class="fas fa-phone-alt"></i>
                         <div class="info-content">
                             <h3>Call Us</h3>
-                            <p>Main: +254 700 123 456</p>
+                            <p>Main: +254 113772133</p>
                             <p>Support: +254 711 789 012</p>
                         </div>
                     </div>
@@ -121,7 +133,9 @@
                         <textarea id="message" name="message" rows="5" required></textarea>
                     </div>
 
-                    <button type="submit" class="submit-btn">Send Message</button>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
                 </form>
             </div>
         </div>
@@ -130,20 +144,65 @@
     <section class="map-section">
         <h2>Find Us</h2>
         <div class="map-container">
-            <!-- Replace with your actual Google Maps embed code -->
-            <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.818769571661!2d36.81972!3d-1.284284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwMTcnMDMuNCJTIDM2wrA0OScxMS4wIkU!5e0!3m2!1sen!2ske!4v1234567890" 
-                width="100%" 
-                height="450" 
-                style="border:0;" 
-                allowfullscreen="" 
-                loading="lazy">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.818769571661!2d36.81972!3d-1.284284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwMTcnMDMuNCJTIDM2wrA0OScxMS4wIkU!5e0!3m2!1sen!2ske!4v1234567890"
+                width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy">
             </iframe>
         </div>
     </section>
 
-    <footer>
-        <p>&copy; 2024 SneakerSpace. All rights reserved.</p>
+    <!-- Enhanced Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-bag"></i> Your Cart</h3>
+            <button class="close-cart" id="closeCart" aria-label="Close cart">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="total-amount">Ksh 0</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">
+                <i class="fas fa-lock"></i> Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SneakerSpace</h3>
+                <p>Your premier destination for authentic sneakers in Kenya.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p><i class="fas fa-map-marker-alt"></i> 123 Kimathi Street, Nairobi</p>
+                <p><i class="fas fa-phone"></i> +254 113772133</p>
+                <p><i class="fas fa-envelope"></i> info@sneakerspace.co.ke</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 SneakerSpace. All rights reserved.</p>
+        </div>
     </footer>
 </body>
-</html> 
+
+</html>

@@ -1,26 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categories | SneakerSpace</title>
+    <title>Categories | SneakerSpace - Browse by Category</title>
+    <meta name="description"
+        content="Browse sneakers by category. Find running, basketball, lifestyle, and training shoes at SneakerSpace.">
     <link rel="stylesheet" href="assets/css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="assets/js/api.js" defer></script>
     <script src="assets/js/theme.js" defer></script>
     <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/main.js" defer></script>
 </head>
+
 <body>
-    <nav>
-        <div class="logo">SneakerSpace</div>
+    <!-- Store Navigation -->
+    <nav class="store-nav">
+        <div class="logo">
+            <a href="home.html">SneakerSpace</a>
+        </div>
         <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="shop.html">Shop</a>
-            <a href="categories.html">Categories</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
+            <a href="home.html" class="nav-link">Home</a>
+            <a href="shop.html" class="nav-link">Shop</a>
+            <a href="categories.html" class="nav-link active">Categories</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="contact.html" class="nav-link">Contact</a>
         </div>
         <div class="nav-icons">
+            <button class="cart-toggle" id="cartToggle" aria-label="Shopping cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </button>
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
                 <i class="fas fa-moon"></i>
             </button>
@@ -28,21 +40,20 @@
     </nav>
 
     <section class="categories-hero">
-        <div class="Categories"></div>
-        <div class="Categories-content">
-            <h1><span class="highlight">Browse Categories</span></h1>
-            <p>Find your <span class="highlight"> Perfect</span> pair by category</p>
+        <div class="hero-content">
+            <h1>Browse <span class="highlight">Categories</span></h1>
+            <p>Find your <span class="highlight">perfect</span> pair by category</p>
         </div>
     </section>
 
-    <section class="categories-grid">
+    <section class="categories-grid" style="margin-top: 80px;">
         <div class="category-card" data-category="running">
             <div class="category-icon">
                 <i class="fas fa-running"></i>
             </div>
             <h3>Running</h3>
             <p>Performance shoes for every runner</p>
-            <span class="item-count">12 Items</span>
+            <span class="item-count">12+ Items</span>
         </div>
 
         <div class="category-card" data-category="basketball">
@@ -51,7 +62,7 @@
             </div>
             <h3>Basketball</h3>
             <p>Court-ready sneakers for peak performance</p>
-            <span class="item-count">15 Items</span>
+            <span class="item-count">15+ Items</span>
         </div>
 
         <div class="category-card" data-category="lifestyle">
@@ -60,7 +71,7 @@
             </div>
             <h3>Lifestyle</h3>
             <p>Casual comfort meets style</p>
-            <span class="item-count">20 Items</span>
+            <span class="item-count">20+ Items</span>
         </div>
 
         <div class="category-card" data-category="training">
@@ -69,7 +80,25 @@
             </div>
             <h3>Training</h3>
             <p>Versatile shoes for any workout</p>
-            <span class="item-count">8 Items</span>
+            <span class="item-count">8+ Items</span>
+        </div>
+
+        <div class="category-card" data-category="casual">
+            <div class="category-icon">
+                <i class="fas fa-shoe-prints"></i>
+            </div>
+            <h3>Casual</h3>
+            <p>Everyday comfort and style</p>
+            <span class="item-count">25+ Items</span>
+        </div>
+
+        <div class="category-card" data-category="boots">
+            <div class="category-icon">
+                <i class="fas fa-hiking"></i>
+            </div>
+            <h3>Boots</h3>
+            <p>Premium boots for all occasions</p>
+            <span class="item-count">10+ Items</span>
         </div>
     </section>
 
@@ -78,12 +107,105 @@
             <h2>Select a category to view products</h2>
         </div>
         <div class="products-grid">
-            <!-- Products will be loaded here dynamically -->
+            <!-- Products will be loaded here dynamically from API -->
         </div>
     </section>
 
-    <footer>
-        <p>&copy; 2024 SneakerSpace. All rights reserved.</p>
+    <!-- Enhanced Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-bag"></i> Your Cart</h3>
+            <button class="close-cart" id="closeCart" aria-label="Close cart">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="total-amount">Ksh 0</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">
+                <i class="fas fa-lock"></i> Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SneakerSpace</h3>
+                <p>Your premier destination for authentic sneakers in Kenya.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p><i class="fas fa-map-marker-alt"></i> 123 Kimathi Street, Nairobi</p>
+                <p><i class="fas fa-phone"></i> +254 113772133</p>
+                <p><i class="fas fa-envelope"></i> info@sneakerspace.co.ke</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 SneakerSpace. All rights reserved.</p>
+        </div>
     </footer>
+
+    <script>
+        // Category card click handler
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('click', async () => {
+                const category = card.dataset.category;
+                const productsSection = document.getElementById('categoryProducts');
+                const productsGrid = productsSection.querySelector('.products-grid');
+                const categoryHeader = productsSection.querySelector('.category-header');
+
+                // Show loading
+                if (typeof ProductRenderer !== 'undefined') {
+                    ProductRenderer.showLoading(productsGrid, 4);
+                }
+
+                // Update header
+                categoryHeader.innerHTML = `
+                    <h2>${category.charAt(0).toUpperCase() + category.slice(1)} Collection</h2>
+                    <button class="back-to-categories" onclick="hideCategoryProducts()">
+                        <i class="fas fa-arrow-left"></i> Back to Categories
+                    </button>
+                `;
+
+                // Fetch products from API
+                if (typeof API !== 'undefined') {
+                    const products = await API.getProductsByCategory(category);
+                    setTimeout(() => {
+                        if (typeof ProductRenderer !== 'undefined') {
+                            ProductRenderer.renderProducts(products, productsGrid);
+                        }
+                    }, 300);
+                }
+
+                productsSection.classList.add('active');
+                productsSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        function hideCategoryProducts() {
+            document.getElementById('categoryProducts').classList.remove('active');
+            document.querySelector('.categories-grid').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
 </body>
-</html> 
+
+</html>

@@ -1,145 +1,453 @@
 <!-- shop.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop | SneakerSpace</title>
+    <title>Shop | SneakerSpace - Premium Sneakers Kenya</title>
+    <meta name="description"
+        content="Browse our collection of premium authentic sneakers. Free shipping on orders above Ksh 5000.">
     <link rel="stylesheet" href="assets/css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="assets/js/api.js" defer></script>
     <script src="assets/js/theme.js" defer></script>
     <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/main.js" defer></script>
 </head>
+
 <body>
-    <nav>
-        <div class="logo">SneakerSpace</div>
+    <!-- Store Navigation -->
+    <nav class="store-nav">
+        <div class="logo">
+            <a href="home.html">SneakerSpace</a>
+        </div>
         <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="shop.html">Shop</a>
-            <a href="categories.html">Categories</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
+            <a href="home.html" class="nav-link">Home</a>
+            <a href="shop.html" class="nav-link active">Shop</a>
+            <a href="categories.html" class="nav-link">Categories</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="contact.html" class="nav-link">Contact</a>
         </div>
         <div class="nav-icons">
+            <div class="search-bar">
+                <input type="text" placeholder="Search sneakers..." id="searchInput">
+                <button type="button" aria-label="Search"><i class="fas fa-search"></i></button>
+            </div>
+            <button class="cart-toggle" id="cartToggle" aria-label="Shopping cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </button>
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
                 <i class="fas fa-moon"></i>
             </button>
         </div>
     </nav>
 
+    <!-- Shop Container -->
     <section class="shop-container">
+        <!-- Sidebar Filters -->
         <aside class="shop-sidebar">
             <div class="filter-section">
-                <h3>Filter By</h3>
+                <h3><i class="fas fa-sliders-h"></i> Filters</h3>
+
                 <div class="filter-group">
-                    <h4>Categories</h4>
-                    <label><input type="checkbox" value="running"> Running</label>
-                    <label><input type="checkbox" value="basketball"> Basketball</label>
-                    <label><input type="checkbox" value="lifestyle"> Lifestyle</label>
-                    <label><input type="checkbox" value="training"> Training</label>
-                </div>
-                <div class="filter-group">
-                    <h4>Price Range</h4>
-                    <input type="range" class="price-slider" min="1000" max="100000" value="100000" step="1000">
-                    <div class="price-display">
-                        <span id="priceValue">100,000</span>
+                    <h4><i class="fas fa-list"></i> Categories</h4>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="running">
+                            <span class="checkmark"></span>
+                            Running
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="basketball">
+                            <span class="checkmark"></span>
+                            Basketball
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="lifestyle">
+                            <span class="checkmark"></span>
+                            Lifestyle
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="casual">
+                            <span class="checkmark"></span>
+                            Casual
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="training">
+                            <span class="checkmark"></span>
+                            Training
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="boots">
+                            <span class="checkmark"></span>
+                            Boots
+                        </label>
                     </div>
                 </div>
+
+                <div class="filter-group">
+                    <h4><i class="fas fa-ruler"></i> Size (EU)</h4>
+                    <div class="size-filter-grid">
+                        <button class="size-filter-btn" data-size="38">38</button>
+                        <button class="size-filter-btn" data-size="39">39</button>
+                        <button class="size-filter-btn" data-size="40">40</button>
+                        <button class="size-filter-btn" data-size="41">41</button>
+                        <button class="size-filter-btn" data-size="42">42</button>
+                        <button class="size-filter-btn" data-size="43">43</button>
+                        <button class="size-filter-btn" data-size="44">44</button>
+                        <button class="size-filter-btn" data-size="45">45</button>
+                        <button class="size-filter-btn" data-size="46">46</button>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h4><i class="fas fa-tag"></i> Price Range</h4>
+                    <div class="price-range-wrapper">
+                        <input type="range" class="price-slider" min="1000" max="100000" value="100000" step="1000">
+                        <div class="price-display">
+                            <span id="priceValue">Ksh 100,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h4><i class="fas fa-crown"></i> Brand</h4>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="nike">
+                            <span class="checkmark"></span>
+                            Nike
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="adidas">
+                            <span class="checkmark"></span>
+                            Adidas
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="jordan">
+                            <span class="checkmark"></span>
+                            Jordan
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="vans">
+                            <span class="checkmark"></span>
+                            Vans
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="puma">
+                            <span class="checkmark"></span>
+                            Puma
+                        </label>
+                    </div>
+                </div>
+
+                <button class="clear-filters-btn" onclick="clearAllFilters()">
+                    <i class="fas fa-times"></i> Clear All Filters
+                </button>
+            </div>
+
+            <!-- Size Guide Quick Reference -->
+            <div class="size-guide-widget">
+                <h4><i class="fas fa-info-circle"></i> Size Guide</h4>
+                <table class="size-table-mini">
+                    <thead>
+                        <tr>
+                            <th>EU</th>
+                            <th>US</th>
+                            <th>UK</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>38</td>
+                            <td>5.5</td>
+                            <td>5</td>
+                        </tr>
+                        <tr>
+                            <td>40</td>
+                            <td>7</td>
+                            <td>6.5</td>
+                        </tr>
+                        <tr>
+                            <td>42</td>
+                            <td>8.5</td>
+                            <td>8</td>
+                        </tr>
+                        <tr>
+                            <td>44</td>
+                            <td>10</td>
+                            <td>9.5</td>
+                        </tr>
+                        <tr>
+                            <td>45</td>
+                            <td>11</td>
+                            <td>10.5</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="#size-guide-full" class="view-full-guide">View Full Size Chart</a>
             </div>
         </aside>
 
+        <!-- Main Shop Content -->
         <main class="shop-main">
             <div class="shop-header">
                 <h1>Our Collection</h1>
                 <div class="shop-controls">
-                    <select class="sort-select">
+                    <span class="results-count" id="resultsCount">Loading products...</span>
+                    <select class="sort-select" aria-label="Sort products">
                         <option value="featured">Featured</option>
                         <option value="price-low">Price: Low to High</option>
                         <option value="price-high">Price: High to Low</option>
                         <option value="newest">Newest First</option>
+                        <option value="name-asc">Name: A to Z</option>
                     </select>
                 </div>
             </div>
 
             <div class="shelf-container">
-                <!-- Premium Shelf -->
+                <!-- Products will be loaded dynamically from API -->
                 <div class="shelf">
                     <div class="shelf-label">
-                        <h2>Premium Collection</h2>
+                        <h2>All Products</h2>
                         <div class="shelf-accent"></div>
                     </div>
                     <div class="shelf-products">
-                        <div class="product-card" data-category="basketball">
-                            <div class="product-image-container">
-                                <img src="assets/images/aj8.jpeg" alt="Air Jordan 8s" class="product-image">
-                                <div class="product-overlay">
-                                    <button onclick="cart.add({id: 1, name: 'Air Jordan 8s', price: 6500, image: 'assets/images/aj8.jpeg'})" class="add-to-cart-btn">
-                                        Add to Cart
-                                    </button>
-                                    <a href="product-detail.html" class="view-details-btn">View Details</a>
-                                </div>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-title">Air Jordan 8s</div>
-                                <div class="product-price">Ksh 6500</div>
-                                <div class="product-rating">★★★★★ (5.0)</div>
-                            </div>
-                        </div>
-                        <div class="product-card" data-category="Casual">
-                            <div class="product-image-container">
-                                <img src="assets/images/VansSk8-Hi.jpg" alt="Vans Sk8 Hi" class="product-image">
-                                <div class="product-overlay">
-                                    <button onclick="cart.add({id: 2, name: 'Vans Sk8 Hi', price: 3500, image: 'assets/images/VansSk8-Hi.jpg'})" class="add-to-cart-btn">
-                                        Add to Cart
-                                    </button>
-                                    <a href="product-detail.html" class="view-details-btn">View Details</a>
-                                </div>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-title">Vans Sk8 Hi</div>
-                                <div class="product-price">Ksh 3500</div>
-                                <div class="product-rating">★★★★★ (4.5)</div>
-                            </div>
-                        </div>
-                        <!-- Add more premium products -->
-                    </div>
-                </div>
-
-                <!-- Running Shelf -->
-                <div class="shelf">
-                    <div class="shelf-label">
-                        <h2>Running Collection</h2>
-                        <div class="shelf-accent"></div>
-                    </div>
-                    <div class="shelf-products">
-                        <!-- Add running shoes -->
-                    </div>
-                </div>
-
-                <!-- Basketball Shelf -->
-                <div class="shelf">
-                    <div class="shelf-label">
-                        <h2>Basketball Collection</h2>
-                        <div class="shelf-accent"></div>
-                    </div>
-                    <div class="shelf-products">
-                        <!-- Add basketball shoes -->
+                        <!-- Loading skeletons will be shown, then replaced with API data -->
                     </div>
                 </div>
             </div>
         </main>
     </section>
 
-    <section class="size-guide animate-on-scroll">
-        <h2>Size Guide</h2>
-        <div class="size-chart">
-            <!-- Add size chart content -->
+    <!-- Full Size Guide Section (Hidden by default) -->
+    <section class="size-guide-full" id="size-guide-full">
+        <div class="size-guide-header" onclick="toggleSizeGuide()">
+            <h2><i class="fas fa-ruler-combined"></i> Complete Size Guide</h2>
+            <button class="size-guide-toggle" aria-label="Toggle size guide">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        <div class="size-guide-content">
+            <p class="size-guide-intro">Find your perfect fit with our comprehensive size chart</p>
+            <div class="size-chart">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>EU</th>
+                            <th>US Men</th>
+                            <th>US Women</th>
+                            <th>UK</th>
+                            <th>CM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>38</td>
+                            <td>5.5</td>
+                            <td>7</td>
+                            <td>5</td>
+                            <td>24</td>
+                        </tr>
+                        <tr>
+                            <td>39</td>
+                            <td>6.5</td>
+                            <td>8</td>
+                            <td>6</td>
+                            <td>24.5</td>
+                        </tr>
+                        <tr>
+                            <td>40</td>
+                            <td>7</td>
+                            <td>8.5</td>
+                            <td>6.5</td>
+                            <td>25</td>
+                        </tr>
+                        <tr>
+                            <td>41</td>
+                            <td>8</td>
+                            <td>9.5</td>
+                            <td>7.5</td>
+                            <td>26</td>
+                        </tr>
+                        <tr>
+                            <td>42</td>
+                            <td>8.5</td>
+                            <td>10</td>
+                            <td>8</td>
+                            <td>26.5</td>
+                        </tr>
+                        <tr>
+                            <td>43</td>
+                            <td>9.5</td>
+                            <td>11</td>
+                            <td>9</td>
+                            <td>27.5</td>
+                        </tr>
+                        <tr>
+                            <td>44</td>
+                            <td>10</td>
+                            <td>11.5</td>
+                            <td>9.5</td>
+                            <td>28</td>
+                        </tr>
+                        <tr>
+                            <td>45</td>
+                            <td>11</td>
+                            <td>12.5</td>
+                            <td>10.5</td>
+                            <td>29</td>
+                        </tr>
+                        <tr>
+                            <td>46</td>
+                            <td>12</td>
+                            <td>13.5</td>
+                            <td>11.5</td>
+                            <td>30</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="size-tips">
+                <div class="tip">
+                    <i class="fas fa-lightbulb"></i>
+                    <p><strong>Pro Tip:</strong> If you're between sizes, we recommend going half a size up for comfort.
+                    </p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <footer>
-        <p>&copy; 2024 SneakerSpace | All rights reserved.</p>
+    <!-- Enhanced Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-bag"></i> Your Cart</h3>
+            <button class="close-cart" id="closeCart" aria-label="Close cart">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be dynamically added here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="total-amount">Ksh 0</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">
+                <i class="fas fa-lock"></i> Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SneakerSpace</h3>
+                <p>Your premier destination for authentic sneakers in Kenya.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="categories.html">Categories</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Returns & Exchanges</a></li>
+                    <li><a href="#">Size Guide</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p><i class="fas fa-map-marker-alt"></i> 123 Kimathi Street, Nairobi</p>
+                <p><i class="fas fa-phone"></i> +254 113772133</p>
+                <p><i class="fas fa-envelope"></i> info@sneakerspace.co.ke</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 SneakerSpace. All rights reserved.</p>
+        </div>
     </footer>
+
+    <script>
+        // Size Filter Button Toggle
+        document.querySelectorAll('.size-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('active');
+            });
+        });
+
+        // Price Slider
+        const priceSlider = document.querySelector('.price-slider');
+        const priceValue = document.getElementById('priceValue');
+
+        if (priceSlider && priceValue) {
+            priceSlider.addEventListener('input', (e) => {
+                const value = parseInt(e.target.value).toLocaleString();
+                priceValue.textContent = 'Ksh ' + value;
+
+                // Update slider background gradient
+                const percent = ((e.target.value - e.target.min) / (e.target.max - e.target.min)) * 100;
+                priceSlider.style.background = `linear-gradient(to right, var(--primary) ${percent}%, var(--border-color) ${percent}%)`;
+            });
+        }
+
+        // Clear All Filters
+        function clearAllFilters() {
+            // Uncheck all checkboxes
+            document.querySelectorAll('.checkbox-label input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+
+            // Deselect all size buttons
+            document.querySelectorAll('.size-filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Reset price slider
+            if (priceSlider) {
+                priceSlider.value = priceSlider.max;
+                priceValue.textContent = 'Ksh ' + parseInt(priceSlider.max).toLocaleString();
+                priceSlider.style.background = `linear-gradient(to right, var(--primary) 100%, var(--border-color) 100%)`;
+            }
+
+            // Show notification
+            if (typeof cart !== 'undefined' && cart.showNotification) {
+                cart.showNotification('Filters cleared', 'info');
+            }
+        }
+
+        // Toggle Size Guide Accordion
+        function toggleSizeGuide() {
+            const sizeGuide = document.getElementById('size-guide-full');
+            sizeGuide.classList.toggle('open');
+        }
+
+        // Also trigger from sidebar link
+        document.querySelector('.view-full-guide')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sizeGuide = document.getElementById('size-guide-full');
+            sizeGuide.classList.add('open');
+            sizeGuide.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+    </script>
 </body>
+
 </html>

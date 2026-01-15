@@ -1,170 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home | SneakerSpace</title>
-    <link rel="stylesheet" href="assets/css/styles.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <script src="assets/js/theme.js" defer></script>
-    <script src="assets/js/navigation.js" defer></script>
-    <script src="assets/js/main.js" defer></script>
-  </head>
-  <body>
-    <!-- Using the store navigation -->
-    <nav class="store-nav">
-      <div class="logo">
-        <a href="home.html">SneakerSpace</a>
-      </div>
-      <div class="nav-links">
-        <a href="home.html" class="nav-link active">Home</a>
-        <a href="shop.html" class="nav-link">Shop</a>
-        <a href="categories.html" class="nav-link">Categories</a>
-        <a href="about.html" class="nav-link">About</a>
-        <a href="contact.html" class="nav-link">Contact</a>
-      </div>
-      <div class="nav-icons">
-        <div class="search-bar">
-          <input type="text" placeholder="Search products..." />
-          <button><i class="fas fa-search"></i></button>
-        </div>
-        <a href="#" class="cart-icon" id="cartToggle">
-          <i class="fas fa-shopping-cart"></i>
-        </a>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-          <i class="fas fa-moon"></i>
-        </button>
-      </div>
-    </nav>
 
-    <section class="store-hero">
-      <div class="hero-slider">
-        <div class="slide active">
-          <img src="assets/images/conversesole.avif" alt="New Arrivals" />
-          <div class="slide-content">
-            <h2>New Arrivals</h2>
-            <p>Discover the latest sneaker drops</p>
-            <a href="shop.html" class="shop-now-btn">Shop Now</a>
-          </div>
-        </div>
-      </div>
-      <div class="slider-controls">
-        <button class="prev-slide"><i class="fas fa-chevron-left"></i></button>
-        <button class="next-slide"><i class="fas fa-chevron-right"></i></button>
-      </div>
-    </section>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home | SneakerSpace - Kenya's Premier Sneaker Destination</title>
+  <meta name="description"
+    content="Discover premium authentic sneakers at SneakerSpace. Kenya's leading sneaker store with nationwide delivery.">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/theme.js" defer></script>
+  <script src="assets/js/navigation.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</head>
 
-    <section class="featured-categories">
-      <h2>Popular Categories</h2>
-      <div class="category-cards">
-        <div class="category-card">
-          <img src="assets/images/pegasus.jpeg" alt="Running" />
-          <div class="category-info">
-            <h3>Running</h3>
-            <p>20+ Products</p>
-            <a href="categories.html" class="view-category">Explore</a>
-          </div>
-        </div>
-        <div class="category-card">
-          <img src="assets/images/aj1s.jpeg" alt="Running" />
-          <div class="category-info">
-            <h3>Basketball</h3>
-            <p>20+ Products</p>
-            <a href="categories.html" class="view-category">Explore</a>
-          </div>
-        </div>
-        <!-- Add more category cards -->
-      </div>
-    </section>
-
-    <section class="trending-products">
-      <div class="category-card">
-        <div class="section-header">
-          <h2>Trending Now</h2>
-          <a href="shop.html" class="view-all">View All</a>
-        </div>
-        <div class="products-grid">
-          <!-- Products will be loaded dynamically from main.js -->
-        </div>
-      </div>
-    </section>
-
-    <section class="special-offer">
-      <div class="category-card">
-        <div class="offer-content">
-          <h2>Special Offer</h2>
-          <p>Get 20% off on selected items</p>
-          <div class="countdown">
-            <div class="countdown-item">
-              <span class="number">02</span>
-              <span class="label">Days</span>
-            </div>
-            <!-- Add more countdown items -->
-          </div>
-          <a href="shop.html" class="offer-btn">Shop Now</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="new-arrivals">
-      <div class="category-card">
-        <div class="section-header">
-          <h2>New Arrivals</h2>
-          <a href="shop.html" class="view-all">View All</a>
-        </div>
-        <div class="products-slider">
-          <!-- Products will be loaded dynamically -->
-        </div>
-      </div>
-    </section>
-
-    <section class="features-banner">
-      <div class="category-card">
-        <div class="feature">
-          <i class="fas fa-truck"></i>
-          <h3>Free Shipping</h3>
-          <p>On orders above Ksh 5000</p>
-        </div>
-      </div>
-      <!-- Add more features -->
-    </section>
-
-    <!-- Include the cart sidebar -->
-    <div class="cart-sidebar" id="cartSidebar">
-      <!-- Cart content from navigation.js -->
+<body>
+  <!-- Store Navigation -->
+  <nav class="store-nav">
+    <div class="logo">
+      <a href="home.html">SneakerSpace</a>
     </div>
+    <div class="nav-links">
+      <a href="home.html" class="nav-link active">Home</a>
+      <a href="shop.html" class="nav-link">Shop</a>
+      <a href="categories.html" class="nav-link">Categories</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-icons">
+      <div class="search-bar">
+        <input type="text" placeholder="Search sneakers..." id="searchInput">
+        <button type="button" aria-label="Search"><i class="fas fa-search"></i></button>
+      </div>
+      <button class="cart-toggle" id="cartToggle" aria-label="Shopping cart">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count">0</span>
+      </button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </nav>
 
-    <footer class="landing-footer">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3>SneakerSpace</h3>
-          <p>Your premier destination for authentic sneakers in Kenya.</p>
-          <div class="social-links">
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-          </div>
-        </div>
-        <div class="footer-section">
-          <h3>Quick Links</h3>
-          <ul>
-            <li><a href="home.html">Enter Store</a></li>
-            <li><a href="#about">About Us</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h3>Contact</h3>
-          <p>
-            <i class="fas fa-map-marker-alt"></i> 123 Kimathi Street, Nairobi
-          </p>
-          <p><i class="fas fa-phone"></i> +254 700 123 456</p>
-          <p><i class="fas fa-envelope"></i> info@sneakerspace.co.ke</p>
+  <!-- Hero Slider Section -->
+  <section class="store-hero">
+    <div class="hero-slider">
+      <div class="slide active">
+        <img src="assets/images/conversesole.avif" alt="New Arrivals Collection">
+        <div class="slide-content">
+          <h2>New Arrivals</h2>
+          <p>Discover the latest sneaker drops from top brands</p>
+          <a href="shop.html" class="shop-now-btn">Shop Now</a>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2024 SneakerSpace. All rights reserved.</p>
+    </div>
+    <div class="slider-controls">
+      <button class="prev-slide" aria-label="Previous slide"><i class="fas fa-chevron-left"></i></button>
+      <button class="next-slide" aria-label="Next slide"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </section>
+
+  <!-- Featured Categories -->
+  <section class="featured-categories">
+    <h2>Popular Categories</h2>
+    <div class="category-cards">
+      <div class="category-card" data-category="running">
+        <img src="assets/images/pegasus.jpeg" alt="Running Sneakers">
+        <div class="category-info">
+          <h3>Running</h3>
+          <p>Performance footwear</p>
+          <a href="categories.html" class="view-category">Explore</a>
+        </div>
       </div>
-    </footer>
-  </body>
+      <div class="category-card" data-category="basketball">
+        <img src="assets/images/aj1s.jpeg" alt="Basketball Sneakers">
+        <div class="category-info">
+          <h3>Basketball</h3>
+          <p>Court-ready kicks</p>
+          <a href="categories.html" class="view-category">Explore</a>
+        </div>
+      </div>
+      <div class="category-card" data-category="casual">
+        <img src="assets/images/VansSk8-Hi.jpg" alt="Casual Sneakers">
+        <div class="category-info">
+          <h3>Casual</h3>
+          <p>Everyday style</p>
+          <a href="categories.html" class="view-category">Explore</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trending Products -->
+  <section class="trending-products">
+    <div class="section-header">
+      <h2>Trending Now</h2>
+      <a href="shop.html" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="products-grid">
+      <!-- Products will be loaded dynamically from API -->
+    </div>
+  </section>
+
+  <!-- Special Offer Banner -->
+  <section class="special-offer">
+    <div class="offer-content">
+      <h2>Special Offer</h2>
+      <p>Get 20% off on selected items this week</p>
+      <div class="countdown">
+        <div class="countdown-item">
+          <span class="number" id="days">02</span>
+          <span class="label">Days</span>
+        </div>
+        <div class="countdown-item">
+          <span class="number" id="hours">14</span>
+          <span class="label">Hours</span>
+        </div>
+        <div class="countdown-item">
+          <span class="number" id="minutes">38</span>
+          <span class="label">Minutes</span>
+        </div>
+        <div class="countdown-item">
+          <span class="number" id="seconds">56</span>
+          <span class="label">Seconds</span>
+        </div>
+      </div>
+      <a href="shop.html" class="offer-btn">Shop Now</a>
+    </div>
+  </section>
+
+  <!-- New Arrivals -->
+  <section class="new-arrivals">
+    <div class="section-header">
+      <h2>New Arrivals</h2>
+      <a href="shop.html" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="products-slider">
+      <!-- Products will be loaded dynamically from API -->
+    </div>
+  </section>
+
+  <!-- Features Banner -->
+  <section class="features-banner">
+    <div class="feature">
+      <i class="fas fa-truck"></i>
+      <h3>Free Shipping</h3>
+      <p>On orders above Ksh 5,000</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-shield-alt"></i>
+      <h3>Authenticity Guaranteed</h3>
+      <p>100% genuine products</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-undo"></i>
+      <h3>Easy Returns</h3>
+      <p>30-day return policy</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-headset"></i>
+      <h3>24/7 Support</h3>
+      <p>Always here to help</p>
+    </div>
+  </section>
+
+  <!-- Newsletter Section -->
+  <section class="newsletter-section">
+    <div class="newsletter-content">
+      <h2>Stay in the Loop</h2>
+      <p>Subscribe for exclusive drops, discounts, and sneaker news</p>
+      <form class="newsletter-form">
+        <input type="email" placeholder="Enter your email address" required>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Enhanced Cart Sidebar -->
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-bag"></i> Your Cart</h3>
+      <button class="close-cart" id="closeCart" aria-label="Close cart">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <!-- Cart items will be dynamically added here -->
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <span class="total-amount">Ksh 0</span>
+      </div>
+      <button class="checkout-btn" id="checkoutBtn">
+        <i class="fas fa-lock"></i> Proceed to Checkout
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>SneakerSpace</h3>
+        <p>Your premier destination for authentic sneakers in Kenya.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="home.html">Home</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="categories.html">Categories</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Customer Service</h3>
+        <ul>
+          <li><a href="#">Shipping Info</a></li>
+          <li><a href="#">Returns & Exchanges</a></li>
+          <li><a href="#">Size Guide</a></li>
+          <li><a href="#">FAQs</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Contact</h3>
+        <p><i class="fas fa-map-marker-alt"></i> 123 Kimathi Street, Nairobi</p>
+        <p><i class="fas fa-phone"></i> +254 113772133</p>
+        <p><i class="fas fa-envelope"></i> info@sneakerspace.co.ke</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 SneakerSpace. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Countdown Timer
+    function updateCountdown() {
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() + 2);
+
+      const now = new Date();
+      const diff = endDate - now;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById('days').textContent = days.toString().padStart(2, '0');
+      document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+      document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+      document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+
 </html>
