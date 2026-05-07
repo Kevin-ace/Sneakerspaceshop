@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details | SneakerSpace</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        body{background:var(--background);color:var(--text-primary)}
+        .order-page{min-height:100vh;padding:2rem 5%;max-width:1200px;margin:0 auto}
+        .page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:1rem}
+        .page-header h1{font-size:1.8rem}
+        .back-btn{color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:0.5rem;transition:color 0.3s}
+        .back-btn:hover{color:var(--primary)}
+        .order-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+        @media(max-width:768px){.order-grid{grid-template-columns:1fr}}
+        .card{background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;padding:1.5rem}
+        .card h2{font-size:1.2rem;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
+        /* Timeline */
+        .timeline{position:relative;padding-left:2rem;margin:1rem 0}
+        .timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:3px;background:var(--border-color);border-radius:2px}
+        .timeline-step{position:relative;padding-bottom:1.5rem}
+        .timeline-step:last-child{padding-bottom:0}
+        .timeline-dot{position:absolute;left:-24px;top:2px;width:20px;height:20px;border-radius:50%;border:3px solid var(--border-color);background:var(--background);display:flex;align-items:center;justify-content:center;font-size:0.6rem;transition:all 0.3s}
+        .timeline-step.active .timeline-dot{border-color:#22c55e;background:#22c55e;color:#fff}
+        .timeline-step.current .timeline-dot{border-color:var(--primary);background:var(--primary);color:#fff;box-shadow:0 0 12px rgba(139,92,246,0.5)}
+        .timeline-step.cancelled .timeline-dot{border-color:#ef4444;background:#ef4444;color:#fff}
+        .timeline-label{font-weight:600;font-size:0.95rem}
+        .timeline-date{color:var(--text-secondary);font-size:0.8rem}
+        .timeline-step.active .timeline-label{color:#22c55e}
+        .timeline-step.current .timeline-label{color:var(--primary)}
+        /* Items table */
+        .items-table{width:100%;border-collapse:collapse}
+        .items-table th{text-align:left;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color)}
+        .items-table td{padding:0.75rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.05)}
+        .items-total{text-align:right;font-size:1.1rem;font-weight:700;color:var(--primary);margin-top:0.75rem}
+        /* Chat */
+        .chat-section{grid-column:1/-1}
+        .chat-box{height:350px;overflow-y:auto;padding:1rem;background:var(--background);border-radius:12px;margin-bottom:1rem;display:flex;flex-direction:column;gap:0.75rem}
+        .chat-msg{max-width:80%;padding:0.75rem 1rem;border-radius:16px;position:relative;word-wrap:break-word}
+        .chat-msg.customer{align-self:flex-end;background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:#fff;border-bottom-right-radius:4px}
+        .chat-msg.admin{align-self:flex-start;background:var(--card-bg);border:1px solid var(--border-color);border-bottom-left-radius:4px}
+        .chat-msg .sender{font-size:0.7rem;opacity:0.7;margin-bottom:0.25rem}
+        .chat-msg .time{font-size:0.65rem;opacity:0.5;margin-top:0.25rem;text-align:right}
+        .chat-msg img{max-width:250px;border-radius:8px;margin-top:0.5rem;cursor:pointer}
+        .chat-input{display:flex;gap:0.5rem;align-items:center}
+        .chat-input input[type=text]{flex:1;padding:0.75rem 1rem;background:var(--background);border:1px solid var(--border-color);border-radius:25px;color:var(--text-primary);font-size:0.95rem}
+        .chat-input input[type=text]:focus{outline:none;border-color:var(--primary)}
+        .chat-btn{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s}
+        .chat-send{background:var(--primary);color:#fff}
+        .chat-send:hover{box-shadow:0 0 15px rgba(139,92,246,0.4)}
+        .chat-attach{background:rgba(6,182,212,0.2);color:#06b6d4}
+        .chat-attach:hover{background:#06b6d4;color:#fff}
+        .chat-empty{text-align:center;padding:3rem;color:var(--text-secondary);opacity:0.5}
+        .img-upload-preview{display:none;padding:0.5rem;background:rgba(139,92,246,0.1);border-radius:10px;margin-bottom:0.5rem;align-items:center;gap:0.5rem}
+        .img-upload-preview img{height:50px;border-radius:6px}
+        .img-upload-preview .remove-img{background:none;border:none;color:#ef4444;cursor:pointer;font-size:1rem}
+        .status-badge{padding:0.3rem 0.8rem;border-radius:20px;font-size:0.8rem;font-weight:600}
+        .status-pending{background:rgba(250,204,21,0.2);color:#facc15}
+        .status-processing{background:rgba(59,130,246,0.2);color:#3b82f6}
+        .status-shipped{background:rgba(168,85,247,0.2);color:#a855f7}
+        .status-delivered{background:rgba(34,197,94,0.2);color:#22c55e}
+        .status-cancelled{background:rgba(239,68,68,0.2);color:#ef4444}
+    </style>
+</head>
+<body>
+    <div class="order-page">
+        <div class="page-header">
+            <h1 id="pageTitle">🚀 Order Details</h1>
+            <a href="account.html" class="back-btn"><i class="fas fa-arrow-left"></i> My Orders</a>
+        </div>
+        <div class="order-grid" id="orderContent">
+            <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-secondary)">
+                <i class="fas fa-spinner fa-spin" style="font-size:2rem"></i><p>Loading order...</p>
+            </div>
+        </div>
+    </div>
+    <input type="file" id="chatFileInput" accept="image/*" style="display:none">
+    <script>
+        const orderId=new URLSearchParams(window.location.search).get('id');
+        if(!orderId)window.location.href='account.html';
+        let chatPollTimer=null;
+        let lastMsgCount=0;
+
+        async function loadOrder(){
+            try{
+                const ar=await fetch('/api/auth/status');const ad=await ar.json();
+                if(!ad.logged_in){window.location.href='account-login.html';return}
+                const r=await fetch(`/api/account/orders/${orderId}`);
+                if(!r.ok)throw new Error();
+                const o=await r.json();
+                document.getElementById('pageTitle').textContent=`Order #${o.id}`;
+                renderOrder(o);
+                startChatPolling();
+            }catch(e){document.getElementById('orderContent').innerHTML='<p style="color:#ef4444;grid-column:1/-1;text-align:center">Order not found</p>'}
+        }
+
+        function renderOrder(o){
+            const steps=['pending','processing','shipped','delivered'];
+            const stepLabels={pending:'Order Placed',processing:'Processing',shipped:'Shipped',delivered:'Delivered'};
+            const stepIcons={pending:'fa-receipt',processing:'fa-cog',shipped:'fa-truck',delivered:'fa-check-circle'};
+            const isCancelled=o.status==='cancelled';
+            document.getElementById('orderContent').innerHTML=`
+                <div class="card">
+                    <h2><i class="fas fa-route"></i> Order Tracking</h2>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem">
+                        <span>Order #${o.id}</span>
+                        <span class="status-badge status-${o.status}">${o.status.charAt(0).toUpperCase()+o.status.slice(1)}</span>
+                    </div>
+                    ${isCancelled?`<div style="text-align:center;padding:2rem;color:#ef4444"><i class="fas fa-times-circle" style="font-size:2rem;margin-bottom:0.5rem"></i><p>This order has been cancelled</p></div>`:`
+                    <div class="timeline">
+                        ${steps.map((s,i)=>{
+                            const stepNum=i+1;
+                            const cls=stepNum<o.status_step?'active':stepNum===o.status_step?'current':'';
+                            return`<div class="timeline-step ${cls}"><div class="timeline-dot"><i class="fas ${stepIcons[s]}"></i></div><div class="timeline-label">${stepLabels[s]}</div></div>`;
+                        }).join('')}
+                    </div>`}
+                </div>
+                <div class="card">
+                    <h2><i class="fas fa-shopping-bag"></i> Order Items</h2>
+                    <table class="items-table">
+                        <thead><tr><th>Product</th><th>Qty</th><th>Price</th></tr></thead>
+                        <tbody>${o.items.map(i=>`<tr><td>${i.product_name}</td><td>${i.quantity}</td><td>Ksh ${(i.price*i.quantity).toLocaleString()}</td></tr>`).join('')}</tbody>
+                    </table>
+                    <div class="items-total">Total: Ksh ${o.total.toLocaleString()}</div>
+                </div>
+                <div class="card chat-section">
+                    <h2><i class="fas fa-comments"></i> Chat with Support</h2>
+                    <div class="chat-box" id="chatBox"><div class="chat-empty"><i class="fas fa-comments"></i><p>Start a conversation about this order</p></div></div>
+                    <div class="img-upload-preview" id="imgPreview"><img id="previewImg"><button class="remove-img" onclick="clearImage()"><i class="fas fa-times"></i></button></div>
+                    <div class="chat-input">
+                        <button class="chat-btn chat-attach" onclick="document.getElementById('chatFileInput').click()" title="Attach image"><i class="fas fa-image"></i></button>
+                        <input type="text" id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMessage()">
+                        <button class="chat-btn chat-send" onclick="sendMessage()" title="Send"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>`;
+        }
+
+        async function loadMessages(){
+            try{
+                const r=await fetch(`/api/chat/${orderId}/messages`);
+                if(!r.ok)return;
+                const msgs=await r.json();
+                if(msgs.length===lastMsgCount)return;
+                lastMsgCount=msgs.length;
+                const box=document.getElementById('chatBox');
+                if(!msgs.length){box.innerHTML='<div class="chat-empty"><i class="fas fa-comments"></i><p>Start a conversation about this order</p></div>';return}
+                box.innerHTML=msgs.map(m=>`
+                    <div class="chat-msg ${m.sender_type}">
+                        <div class="sender">${m.sender_type==='admin'?'🛡️ Support':'You'}</div>
+                        ${m.message?`<div>${m.message}</div>`:''}
+                        ${m.image_url?`<img src="${m.image_url}" onclick="window.open(this.src,'_blank')">`:''}
+                        <div class="time">${new Date(m.created_at).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}</div>
+                    </div>`).join('');
+                box.scrollTop=box.scrollHeight;
+            }catch(e){}
+        }
+
+        async function sendMessage(){
+            const input=document.getElementById('chatInput');
+            const fileInput=document.getElementById('chatFileInput');
+            const text=input.value.trim();
+            if(fileInput.files.length){await uploadImage(text);input.value='';clearImage();return}
+            if(!text)return;
+            try{
+                await fetch(`/api/chat/${orderId}/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})});
+                input.value='';lastMsgCount=0;loadMessages();
+            }catch(e){}
+        }
+
+        async function uploadImage(caption){
+            const fileInput=document.getElementById('chatFileInput');
+            const fd=new FormData();
+            fd.append('image',fileInput.files[0]);
+            if(caption)fd.append('message',caption);
+            try{
+                await fetch(`/api/chat/${orderId}/upload`,{method:'POST',body:fd});
+                lastMsgCount=0;loadMessages();
+            }catch(e){}
+        }
+
+        function clearImage(){
+            document.getElementById('chatFileInput').value='';
+            document.getElementById('imgPreview').style.display='none';
+        }
+
+        document.getElementById('chatFileInput').addEventListener('change',function(){
+            if(this.files[0]){
+                const preview=document.getElementById('imgPreview');
+                document.getElementById('previewImg').src=URL.createObjectURL(this.files[0]);
+                preview.style.display='flex';
+            }
+        });
+
+        function startChatPolling(){loadMessages();chatPollTimer=setInterval(loadMessages,3000)}
+        window.addEventListener('beforeunload',()=>clearInterval(chatPollTimer));
+        loadOrder();
+    </script>
+</body>
+</html>

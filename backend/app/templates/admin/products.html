@@ -1,0 +1,224 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<div class="header">
+    <h1>📦 Products Management</h1>
+    <a href="{{ url_for('main.add_product') }}" class="btn-primary">
+        <i class="fas fa-plus"></i> Add New Product
+    </a>
+</div>
+
+<!-- Search and Filter Bar -->
+<div class="panel" style="margin-bottom: 1.5rem;">
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+        <div style="flex: 1; min-width: 200px;">
+            <input type="text" id="searchProducts" placeholder="Search products..."
+                style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 10px; color: var(--text-primary);"
+                onkeyup="filterProducts()">
+        </div>
+        <div>
+            <select id="categoryFilter" onchange="filterProducts()"
+                style="padding: 0.75rem 1rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 10px; color: var(--text-primary);">
+                <option value="">All Categories</option>
+                <option value="running">Running</option>
+                <option value="basketball">Basketball</option>
+                <option value="lifestyle">Lifestyle</option>
+                <option value="training">Training</option>
+            </select>
+        </div>
+        <div style="color: var(--text-secondary);">
+            <span id="productCount">{{ products|length }}</span> products
+        </div>
+    </div>
+</div>
+
+<!-- Products Grid -->
+<div class="panel">
+    <div class="products-grid" id="productsGrid">
+        {% for product in products %}
+        <div class="admin-product-card" data-name="{{ product.name|lower }}"
+            data-category="{{ product.category|lower }}">
+            <div class="product-image">
+                <img src="{{ product.display_image_url }}" alt="{{ product.name }}"
+                    onerror="this.src='/assets/images/hero-sneaker.png'">
+                {% if product.is_featured %}
+                <span class="featured-badge">⭐ Featured</span>
+                {% endif %}
+            </div>
+            <div class="product-details">
+                <div class="product-category-tag">{{ product.category }}</div>
+                <h3 class="product-name">{{ product.name }}</h3>
+                <p class="product-desc">{{ product.description[:80] if product.description else 'No description' }}{% if
+                    product.description and product.description|length > 80 %}...{% endif %}</p>
+                <div class="product-meta">
+                    <span class="product-price">Ksh {{ "{:,.0f}".format(product.price) }}</span>
+                    <span class="product-stock {% if product.stock and product.stock < 5 %}low-stock{% endif %}">
+                        <i class="fas fa-box"></i> {{ product.stock or 10 }} in stock
+                    </span>
+                </div>
+                <div class="product-actions">
+                    <a href="{{ url_for('main.edit_product', product_id=product.id) }}" class="btn btn-sm btn-edit">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <form action="{{ url_for('main.delete_product', product_id=product.id) }}" method="POST"
+                        class="d-inline" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                        <button type="submit" class="btn btn-sm btn-delete">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if not products %}
+    <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+        <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+        <p>No products yet. Add your first product to get started!</p>
+        <a href="{{ url_for('main.add_product') }}" class="btn-primary" style="margin-top: 1rem;">
+            <i class="fas fa-plus"></i> Add Product
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .admin-product-card {
+        background: var(--bg-dark);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .admin-product-card:hover {
+        border-color: rgba(139, 92, 246, 0.5);
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+        transform: translateY(-5px);
+    }
+
+    .admin-product-card .product-image {
+        position: relative;
+        height: 180px;
+        overflow: hidden;
+    }
+
+    .admin-product-card .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .featured-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: #000;
+        padding: 0.25rem 0.5rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .product-details {
+        padding: 1rem;
+    }
+
+    .product-category-tag {
+        display: inline-block;
+        background: rgba(139, 92, 246, 0.2);
+        color: var(--primary);
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+
+    .product-name {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .product-desc {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+    }
+
+    .product-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .product-price {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .product-stock {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+
+    .product-stock.low-stock {
+        color: #ef4444;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .product-actions .btn {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .admin-product-card.hidden {
+        display: none;
+    }
+</style>
+
+<script>
+    function filterProducts() {
+        const search = document.getElementById('searchProducts').value.toLowerCase();
+        const category = document.getElementById('categoryFilter').value.toLowerCase();
+        const cards = document.querySelectorAll('.admin-product-card');
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const name = card.dataset.name;
+            const cardCategory = card.dataset.category;
+
+            const matchesSearch = name.includes(search);
+            const matchesCategory = !category || cardCategory === category;
+
+            if (matchesSearch && matchesCategory) {
+                card.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('productCount').textContent = visibleCount;
+    }
+</script>
+{% endblock %}

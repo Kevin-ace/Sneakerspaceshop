@@ -1,0 +1,32 @@
+# Render Blueprint — Infrastructure as Code
+# This file auto-configures your services on Render
+
+services:
+  - type: web
+    name: sneakerspace
+    runtime: python
+    region: oregon
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "cd backend && gunicorn run:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.0"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FLASK_ENV
+        value: production
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false  # Render will prompt you to set this
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sneakerspace-db
+          property: connectionURI
+
+databases:
+  - name: sneakerspace-db
+    plan: free
+    region: oregon
+    databaseName: sneakers_db

@@ -1,122 +1,174 @@
-The site is live at https://kevin-ace.github.io/Sneakerspaceshop/
+# 🚀 SneakerSpace
 
-# SneakerSpace
-
-A modern e-commerce platform for premium sneakers, featuring a responsive design and seamless user experience.
+A full-stack e-commerce platform for premium sneakers with customer accounts, order tracking, real-time chat, and a comprehensive admin dashboard.
 
 ## Features
 
-### Landing Page
-- Modern hero section with parallax background
-- Animated content transitions
-- Real-time theme switching (Light/Dark mode)
-- Responsive navigation with scroll effects
-- Featured products showcase
-- Benefits section highlighting key services
+### Storefront
+- Modern space-themed UI with dark/light mode
+- Product catalog with categories, search, and filtering
+- Shopping cart with persistent state
+- Customer registration & login
+- Checkout (requires account)
+- Order tracking with status timeline
+- Per-order chat with admin (supports image sharing)
+- Contact form
 
-### Core Features
-- Authentic product verification
-- Fast nationwide delivery (24-48 hours)
-- 30-day hassle-free returns
-- Price range filtering
-- Category-based product browsing
-- Responsive product grid layout
+### Admin Dashboard (`/admin`)
+- Sales analytics with charts
+- Product management (CRUD + image upload)
+- Order management with status updates
+- Customer chat per order
+- Contact message inbox with unread badges
+- Promotional offers management
 
-## Technology Stack
+### Security
+- Bcrypt password hashing
+- CSRF protection (Flask-WTF)
+- Rate limiting on auth/checkout/contact endpoints
+- Input sanitization (XSS prevention)
+- Secure session cookies (HTTPOnly, SameSite)
+- Content Security Policy headers
 
-### Frontend
-- HTML5
-- CSS3 (Custom variables for theming)
-- JavaScript (Vanilla)
-- Font Awesome Icons
+## Tech Stack
 
-### Design Features
-- CSS Grid and Flexbox layouts
-- CSS Custom Properties (variables)
-- Smooth animations and transitions
-- Mobile-first responsive design
-- Modern glassmorphism effects
+| Layer | Technology |
+|-------|-----------|
+| Frontend | HTML5, CSS3 (Custom Properties), Vanilla JS |
+| Backend | Flask (Python) |
+| Database | PostgreSQL |
+| Auth | Flask-Login (dual-role: customer + admin) |
+| Deployment | Render (gunicorn) |
+
+## Local Development
+
+### Prerequisites
+- Python 3.12+
+- PostgreSQL
+
+### Setup
+
+```bash
+# Clone
+git clone git@github.com:Kevin-ace/Sneakerspaceshop.git
+cd Sneakerspaceshop
+
+# Create & activate venv
+cd backend
+python -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your database credentials and a strong secret key
+
+# Initialize database
+export FLASK_APP=run.py
+flask db upgrade
+flask init-db
+
+# Run
+python run.py
+```
+
+The app runs at **http://localhost:5000**
+
+| URL | Description |
+|-----|-------------|
+| `/` | Landing page |
+| `/home.html` | Store home |
+| `/shop.html` | Product catalog |
+| `/account-login.html` | Customer login |
+| `/account.html` | Customer dashboard |
+| `/admin/login` | Admin login |
+
+Default admin: `admin` / `admin` (change in `.env`)
+
+---
+
+## Deploy to Render (Free)
+
+### One-Click Deploy
+
+1. Push your code to GitHub
+2. Go to [render.com/blueprints](https://dashboard.render.com/blueprints)
+3. Click **New Blueprint Instance**
+4. Connect your GitHub repo (`Kevin-ace/Sneakerspaceshop`)
+5. Render auto-detects the `render.yaml` and creates:
+   - A **Web Service** (Python + gunicorn)
+   - A **PostgreSQL database** (free tier)
+6. Set the `ADMIN_PASSWORD` environment variable when prompted
+7. Click **Apply** — deploy takes ~3 minutes
+
+### Manual Deploy
+
+1. Go to [render.com](https://render.com) → **New +** → **Web Service**
+2. Connect your GitHub repo
+3. Configure:
+   - **Build Command:** `./build.sh`
+   - **Start Command:** `cd backend && gunicorn run:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120`
+4. Add a **PostgreSQL** database (New + → PostgreSQL)
+5. Set environment variables:
+   | Variable | Value |
+   |----------|-------|
+   | `DATABASE_URL` | (copy Internal URL from your Render PostgreSQL) |
+   | `SECRET_KEY` | (click Generate) |
+   | `FLASK_ENV` | `production` |
+   | `ADMIN_USERNAME` | `admin` |
+   | `ADMIN_PASSWORD` | (your strong password) |
+6. Click **Deploy**
+
+### Auto-Deploy from GitHub
+
+Once connected, Render **auto-deploys on every push to `main`**. To configure:
+- Go to your service → **Settings** → **Build & Deploy**
+- **Auto-Deploy**: `Yes` (default)
+- **Branch**: `main`
+
+Every `git push origin main` triggers a new deployment automatically.
+
+---
 
 ## Project Structure
 
 ```
-sneakerspace/
+SneakerSpace/
+├── render.yaml              # Render deployment config
+├── build.sh                 # Build script (migrations + setup)
+├── index.html               # Landing page
+├── home.html                # Store home
+├── shop.html                # Product catalog
+├── account-login.html       # Customer login
+├── account-register.html    # Customer registration
+├── account.html             # Customer dashboard
+├── order-detail.html        # Order tracking + chat
+├── contact.html             # Contact form
 ├── assets/
-│   ├── css/
-│   │   ├── styles.css
-│   │   └── landing.css
+│   ├── css/styles.css       # Global styles
 │   ├── js/
-│   │   ├── main.js
-│   │   ├── theme.js
-│   │   └── navigation.js
-│   └── images/
-├── index.html
-├── about.html
-└── home.html
+│   │   ├── api.js           # API service layer
+│   │   ├── main.js          # App logic (cart, checkout, UI)
+│   │   ├── theme.js         # Theme toggle
+│   │   └── navigation.js    # Nav utilities
+│   └── images/              # Product images
+└── backend/
+    ├── run.py               # App entry point
+    ├── config.py            # Configuration
+    ├── requirements.txt     # Python dependencies
+    ├── .env.example         # Environment template
+    ├── uploads/             # User uploads (products, chat)
+    ├── migrations/          # Alembic migrations
+    └── app/
+        ├── __init__.py      # App factory
+        ├── models.py        # DB models
+        ├── routes.py        # All routes & API
+        ├── forms.py         # WTForms
+        └── templates/admin/ # Admin portal templates
 ```
-
-## Key Components
-
-### Navigation
-References:
-```
-startLine: 14
-endLine: 25
-```
-from index.html
-
-### Theme System
-References:
-```
-startLine: 1
-endLine: 7
-```
-from landing.css
-
-### Product Grid
-References:
-```
-startLine: 161
-endLine: 177
-```
-from styles.css
-
-## Responsive Design
-
-The project implements a mobile-first approach with breakpoints at:
-- Mobile: < 768px
-- Tablet: 768px - 968px
-- Desktop: > 968px
-
-References:
-```
-startLine: 309
-endLine: 333
-```
-from landing.css
-
-## Setup and Installation
-
-1. Clone the repository
-2. Open index.html in a modern web browser
-3. No build process required - pure HTML, CSS, and JavaScript
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a new Pull Request
 
 ## License
 
 © 2024 Kevin | All rights reserved.
-```

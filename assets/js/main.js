@@ -234,11 +234,79 @@ const cart = {
                     this.showNotification('Your cart is empty', 'info');
                     return;
                 }
-                // Redirect to checkout or show checkout modal
-                this.showNotification('Proceeding to checkout...', 'success');
-                // window.location.href = 'checkout.html';
+                this.showCheckoutModal();
             });
         }
+    },
+
+    async showCheckoutModal() {
+        // Check if customer is logged in
+        try {
+            const authRes = await fetch('/api/auth/status');
+            const authData = await authRes.json();
+            if (!authData.logged_in) {
+                this.showNotification('Please login to place an order', 'info');
+                setTimeout(() => { window.location.href = 'account-login.html'; }, 1000);
+                return;
+            }
+        } catch (e) {
+            this.showNotification('Please login to place an order', 'info');
+            setTimeout(() => { window.location.href = 'account-login.html'; }, 1000);
+            return;
+        }
+
+        document.querySelectorAll('.checkout-modal').forEach(m => m.remove());
+        const modal = document.createElement('div');
+        modal.className = 'checkout-modal';
+        modal.innerHTML = `
+            <div class="checkout-overlay" onclick="this.parentElement.remove()"></div>
+            <div class="checkout-content">
+                <button class="close-modal" onclick="this.closest('.checkout-modal').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2><i class="fas fa-lock"></i> Confirm Order</h2>
+                <div class="checkout-summary">
+                    <p><strong>${this.getItemCount()}</strong> item(s) — <strong>Ksh ${this.getTotal().toLocaleString()}</strong></p>
+                </div>
+                <div style="margin-bottom:1rem;color:var(--text-secondary,#a5a5c0);font-size:0.9rem;text-align:center">
+                    Order will be placed using your account details.
+                </div>
+                <button class="checkout-submit-btn" id="confirmOrderBtn">
+                    <i class="fas fa-check-circle"></i> Place Order — Ksh ${this.getTotal().toLocaleString()}
+                </button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        setTimeout(() => modal.classList.add('active'), 10);
+
+        document.getElementById('confirmOrderBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('confirmOrderBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            btn.disabled = true;
+
+            try {
+                const result = await API.checkout({
+                    items: this.items.map(item => ({
+                        id: item.id, name: item.name, quantity: item.quantity, price: item.price
+                    }))
+                });
+                modal.remove();
+                this.clear();
+                this.toggleSidebar();
+                this.showNotification(
+                    `Order #${result.order_id} placed! Total: Ksh ${result.total.toLocaleString()}`,
+                    'success'
+                );
+            } catch (error) {
+                if (error.message && error.message.includes('login')) {
+                    window.location.href = 'account-login.html';
+                    return;
+                }
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Place Order';
+                btn.disabled = false;
+                this.showNotification(error.message || 'Checkout failed.', 'error');
+            }
+        });
     }
 };
 
@@ -561,19 +629,29 @@ const ContactForm = {
             const formData = new FormData(form);
             const data = Object.fromEntries(formData);
 
-            // Show loading state
             const submitBtn = form.querySelector('.submit-btn');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Sending...';
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
             submitBtn.disabled = true;
 
-            // Simulate API call (replace with actual API call)
-            setTimeout(() => {
-                cart.showNotification('Message sent successfully!', 'success');
-                form.reset();
-                submitBtn.textContent = originalText;
+            try {
+                if (typeof API !== 'undefined' && API.sendContactMessage) {
+                    await API.sendContactMessage(data);
+                    cart.showNotification('Message sent successfully!', 'success');
+                    form.reset();
+                } else {
+                    // Fallback if API not loaded
+                    setTimeout(() => {
+                        cart.showNotification('Message sent successfully!', 'success');
+                        form.reset();
+                    }, 1000);
+                }
+            } catch (error) {
+                cart.showNotification(error.message || 'Failed to send message', 'error');
+            } finally {
+                submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
-            }, 1500);
+            }
         });
     }
 };
@@ -616,12 +694,55 @@ document.addEventListener('DOMContentLoaded', () => {
     ProductInteractions.init();
     ContactForm.init();
     Newsletter.init();
+    AccountUI.init();
 
     // Lazy load images
     document.querySelectorAll('img[data-src]').forEach(img => {
         img.src = img.dataset.src;
     });
 });
+
+// ================================
+// Account UI (dynamic nav icon)
+// ================================
+const AccountUI = {
+    async init() {
+        const navIcons = document.querySelector('.nav-icons');
+        if (!navIcons) return;
+
+        // Add account button before theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const accountBtn = document.createElement('a');
+        accountBtn.className = 'account-toggle';
+        accountBtn.id = 'accountToggle';
+        accountBtn.setAttribute('aria-label', 'Account');
+        accountBtn.style.cssText = 'color:var(--text-secondary);font-size:1.2rem;cursor:pointer;transition:color 0.3s;text-decoration:none;display:flex;align-items:center;gap:0.3rem';
+
+        try {
+            const r = await fetch('/api/auth/status');
+            const d = await r.json();
+            if (d.logged_in) {
+                accountBtn.href = 'account.html';
+                accountBtn.innerHTML = `<i class="fas fa-user-circle" style="color:var(--primary)"></i>`;
+                accountBtn.title = d.customer.name;
+            } else {
+                accountBtn.href = 'account-login.html';
+                accountBtn.innerHTML = `<i class="fas fa-user"></i>`;
+                accountBtn.title = 'Sign In';
+            }
+        } catch (e) {
+            accountBtn.href = 'account-login.html';
+            accountBtn.innerHTML = `<i class="fas fa-user"></i>`;
+            accountBtn.title = 'Sign In';
+        }
+
+        if (themeToggle) {
+            navIcons.insertBefore(accountBtn, themeToggle);
+        } else {
+            navIcons.appendChild(accountBtn);
+        }
+    }
+};
 
 // Export for global access
 window.cart = cart;

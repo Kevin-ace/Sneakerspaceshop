@@ -1,0 +1,432 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<div class="header">
+    <h1>{{ '📦 ' + legend }}</h1>
+    <a href="{{ url_for('main.admin_products') }}" class="btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Products
+    </a>
+</div>
+
+<div class="panel">
+    <form method="POST" enctype="multipart/form-data" class="product-form">
+        {{ form.hidden_tag() }}
+
+        <div class="form-grid">
+            <!-- Left Column: Product Details -->
+            <div class="form-column">
+                <div class="form-section">
+                    <h3><i class="fas fa-info-circle"></i> Product Details</h3>
+
+                    <div class="form-group">
+                        <label class="form-label">{{ form.name.label.text }}</label>
+                        {{ form.name(class="form-control", placeholder="e.g. Nike Air Jordan 1 Retro High") }}
+                        {% for error in form.name.errors %}
+                        <span class="form-error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">{{ form.description.label.text }}</label>
+                        {{ form.description(class="form-control form-textarea", placeholder="Describe the product...", rows=4) }}
+                        {% for error in form.description.errors %}
+                        <span class="form-error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">{{ form.price.label.text }}</label>
+                            {{ form.price(class="form-control", placeholder="e.g. 15000") }}
+                            {% for error in form.price.errors %}
+                            <span class="form-error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">{{ form.category.label.text }}</label>
+                            {{ form.category(class="form-control form-select") }}
+                            {% for error in form.category.errors %}
+                            <span class="form-error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">{{ form.stock.label.text }}</label>
+                            {{ form.stock(class="form-control", placeholder="e.g. 10") }}
+                            {% for error in form.stock.errors %}
+                            <span class="form-error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group form-checkbox-group">
+                            <label class="form-label">&nbsp;</label>
+                            <label class="checkbox-label-admin">
+                                {{ form.is_featured(class="form-checkbox") }}
+                                <span class="checkmark-admin"></span>
+                                <span>⭐ Featured Product</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Image -->
+            <div class="form-column">
+                <div class="form-section">
+                    <h3><i class="fas fa-image"></i> Product Image</h3>
+
+                    <!-- Image Preview -->
+                    <div class="image-preview-container" id="imagePreview">
+                        {% if product and product.display_image_url %}
+                        <img src="{{ product.display_image_url }}" alt="Current image" id="previewImg">
+                        <span class="current-image-label">Current Image</span>
+                        {% else %}
+                        <div class="image-placeholder">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Upload or paste URL</p>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="form-group">
+                        <label class="form-label">Upload Image</label>
+                        <div class="file-upload-wrapper">
+                            {{ form.image(class="file-input", id="imageInput", accept="image/*") }}
+                            <label for="imageInput" class="file-upload-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span id="fileName">Choose a file or drag it here</span>
+                            </label>
+                        </div>
+                        <p class="form-hint">Max 5MB. Supports JPG, PNG, GIF, WebP, AVIF</p>
+                        {% for error in form.image.errors %}
+                        <span class="form-error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Or URL -->
+                    <div class="form-group">
+                        <label class="form-label">{{ form.image_url.label.text }}</label>
+                        {{ form.image_url(class="form-control", placeholder="https://example.com/image.jpg", id="imageUrlInput") }}
+                        {% for error in form.image_url.errors %}
+                        <span class="form-error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="form-actions">
+            {{ form.submit(class="btn-primary btn-large") }}
+            <a href="{{ url_for('main.admin_products') }}" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .btn-secondary {
+        background: rgba(139, 92, 246, 0.15);
+        border: 1px solid var(--border);
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        color: var(--text-primary);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(139, 92, 246, 0.3);
+        color: white;
+    }
+
+    .product-form .form-grid {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 2rem;
+    }
+
+    .form-section {
+        background: var(--bg-dark);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-primary);
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+    }
+
+    .form-textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .form-select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a5a5c0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 2.5rem;
+    }
+
+    .form-select option {
+        background: var(--bg-dark);
+        color: var(--text-primary);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .form-error {
+        color: #ef4444;
+        font-size: 0.85rem;
+        margin-top: 0.35rem;
+        display: block;
+    }
+
+    .form-hint {
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        margin-top: 0.35rem;
+    }
+
+    /* Checkbox */
+    .form-checkbox-group {
+        display: flex;
+        align-items: flex-end;
+    }
+
+    .checkbox-label-admin {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        padding: 0.875rem 1rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .checkbox-label-admin:hover {
+        border-color: var(--primary);
+    }
+
+    .form-checkbox {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--primary);
+    }
+
+    /* Image Preview */
+    .image-preview-container {
+        width: 100%;
+        aspect-ratio: 1;
+        max-height: 280px;
+        background: var(--bg-card);
+        border: 2px dashed var(--border);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 1.25rem;
+        position: relative;
+    }
+
+    .image-preview-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .current-image-label {
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+    }
+
+    .image-placeholder {
+        text-align: center;
+        color: var(--text-secondary);
+    }
+
+    .image-placeholder i {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+        opacity: 0.5;
+    }
+
+    /* File Upload */
+    .file-upload-wrapper {
+        position: relative;
+    }
+
+    .file-input {
+        opacity: 0;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    .file-upload-label {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.875rem 1rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .file-upload-label:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    /* Submit Area */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .btn-large {
+        padding: 1rem 2.5rem;
+        font-size: 1.05rem;
+    }
+
+    .btn-cancel {
+        padding: 1rem 2rem;
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 25px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        border-color: #ef4444;
+        color: #ef4444;
+    }
+
+    @media (max-width: 900px) {
+        .product-form .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+    // Image preview from file input
+    const imageInput = document.getElementById('imageInput');
+    const imageUrlInput = document.getElementById('imageUrlInput');
+    const previewContainer = document.getElementById('imagePreview');
+
+    if (imageInput) {
+        imageInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('fileName').textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview" id="previewImg">`;
+                };
+                reader.readAsDataURL(file);
+                // Clear URL field when file is selected
+                if (imageUrlInput) imageUrlInput.value = '';
+            }
+        });
+    }
+
+    // Image preview from URL input
+    if (imageUrlInput) {
+        let urlTimeout;
+        imageUrlInput.addEventListener('input', function (e) {
+            clearTimeout(urlTimeout);
+            urlTimeout = setTimeout(() => {
+                const url = e.target.value.trim();
+                if (url && url.match(/^https?:\/\/.+/)) {
+                    const img = new Image();
+                    img.onload = function () {
+                        previewContainer.innerHTML = `<img src="${url}" alt="Preview" id="previewImg">`;
+                    };
+                    img.onerror = function () {
+                        previewContainer.innerHTML = `
+                            <div class="image-placeholder">
+                                <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>
+                                <p>Could not load image</p>
+                            </div>`;
+                    };
+                    img.src = url;
+                }
+            }, 500);
+        });
+    }
+</script>
+{% endblock %}

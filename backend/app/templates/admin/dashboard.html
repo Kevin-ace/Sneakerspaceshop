@@ -1,34 +1,212 @@
 {% extends "admin/base.html" %}
 {% block content %}
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>Product Dashboard</h1>
-        <a href="{{ url_for('add_product') }}" class="btn btn-primary">Add New Product</a>
+<div class="header">
+    <h1>📊 Dashboard</h1>
+    <div>
+        <a href="{{ url_for('main.add_product') }}" class="btn-primary">
+            <i class="fas fa-plus"></i> Add Product
+        </a>
     </div>
-    <table class="table table-striped">
+</div>
+
+<!-- Stats Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon purple">
+            <i class="fas fa-box"></i>
+        </div>
+        <div class="stat-value">{{ stats.total_products }}</div>
+        <div class="stat-label">Total Products</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon cyan">
+            <i class="fas fa-shopping-bag"></i>
+        </div>
+        <div class="stat-value">{{ stats.total_orders }}</div>
+        <div class="stat-label">Total Orders</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon pink">
+            <i class="fas fa-coins"></i>
+        </div>
+        <div class="stat-value">Ksh {{ "{:,.0f}".format(stats.total_revenue) }}</div>
+        <div class="stat-label">Total Revenue</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon gold">
+            <i class="fas fa-tags"></i>
+        </div>
+        <div class="stat-value">{{ stats.active_offers }}</div>
+        <div class="stat-label">Active Offers</div>
+    </div>
+</div>
+
+<div class="grid-2">
+    <!-- Sales Chart -->
+    <div class="panel">
+        <div class="panel-header">
+            <h3 class="panel-title">📈 Sales Overview (Last 7 Days)</h3>
+        </div>
+        <div class="chart-container">
+            <canvas id="salesChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="panel">
+        <div class="panel-header">
+            <h3 class="panel-title">⚡ Quick Actions</h3>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <a href="{{ url_for('main.add_product') }}" class="btn-primary" style="justify-content: center;">
+                <i class="fas fa-plus"></i> Add New Product
+            </a>
+            <a href="{{ url_for('main.admin_offers') }}" class="btn-primary"
+                style="background: linear-gradient(135deg, #06b6d4, #22d3ee); justify-content: center;">
+                <i class="fas fa-tags"></i> Manage Offers
+            </a>
+            <form action="{{ url_for('main.seed_demo_data') }}" method="POST" style="margin: 0;">
+                <button type="submit" class="btn-primary"
+                    style="width: 100%; background: linear-gradient(135deg, #f472b6, #ec4899); justify-content: center;">
+                    <i class="fas fa-database"></i> Seed Demo Data
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Products Table -->
+<div class="panel">
+    <div class="panel-header">
+        <h3 class="panel-title">📦 Products</h3>
+        <a href="{{ url_for('main.add_product') }}" class="btn-primary btn-sm">
+            <i class="fas fa-plus"></i> Add
+        </a>
+    </div>
+    <table class="table table-dark">
         <thead>
             <tr>
                 <th>Image</th>
                 <th>Name</th>
                 <th>Category</th>
                 <th>Price</th>
+                <th>Stock</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for product in products %}
             <tr>
-                <td><img src="{{ product.image_url }}" alt="{{ product.name }}" width="50"></td>
+                <td><img src="{{ product.display_image_url }}" alt="{{ product.name }}" class="product-thumb" onerror="this.src='/assets/images/hero-sneaker.png'"></td>
                 <td>{{ product.name }}</td>
-                <td>{{ product.category }}</td>
-                <td>Ksh {{ "%.2f"|format(product.price) }}</td>
+                <td><span class="badge badge-processing">{{ product.category }}</span></td>
+                <td>Ksh {{ "{:,.0f}".format(product.price) }}</td>
+                <td>{{ product.stock or 10 }}</td>
                 <td>
-                    <a href="{{ url_for('edit_product', product_id=product.id) }}" class="btn btn-secondary btn-sm">Edit</a>
-                    <form action="{{ url_for('delete_product', product_id=product.id) }}" method="POST" class="d-inline">
-                        <input type="submit" value="Delete" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this product?');">
+                    <a href="{{ url_for('main.edit_product', product_id=product.id) }}" class="btn btn-sm btn-edit">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <form action="{{ url_for('main.delete_product', product_id=product.id) }}" method="POST"
+                        class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-delete"
+                            onclick="return confirm('Delete this product?');">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </form>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+</div>
+
+<!-- Recent Orders -->
+<div class="panel">
+    <div class="panel-header">
+        <h3 class="panel-title">🛒 Recent Orders</h3>
+        <a href="{{ url_for('main.admin_orders') }}" class="btn-primary btn-sm">View All</a>
+    </div>
+    {% if orders %}
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.customer_name or order.customer_email }}</td>
+                <td>Ksh {{ "{:,.0f}".format(order.total) }}</td>
+                <td><span class="badge badge-{{ order.status }}">{{ order.status }}</span></td>
+                <td>{{ order.created_at.strftime('%b %d, %Y') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--text-secondary); text-align: center; padding: 2rem;">
+        No orders yet. Seed demo data to see sample orders.
+    </p>
+    {% endif %}
+</div>
+
+<script>
+    // Fetch sales data and render chart
+    async function loadSalesChart() {
+        try {
+            const response = await fetch('/admin/api/sales-chart');
+            const data = await response.json();
+
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Revenue (Ksh)',
+                        data: data.sales,
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#8b5cf6',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#a5a5c0' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(139, 92, 246, 0.1)' },
+                            ticks: { color: '#a5a5c0' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(139, 92, 246, 0.1)' },
+                            ticks: { color: '#a5a5c0' }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Failed to load chart:', error);
+        }
+    }
+
+    loadSalesChart();
+</script>
 {% endblock %}

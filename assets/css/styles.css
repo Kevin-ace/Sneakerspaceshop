@@ -8,32 +8,55 @@
 }
 
 :root {
-    --primary: #00008B;
-    --secondary: #2c3e50;
-    --accent: #ffd93d;
-    --background: #ffffff;
-    --surface: #f8f9fa;
-    --text-primary: #333333;
-    --text-secondary: #666666;
-    --border-color: #eeeeee;
-    --card-bg: #ffffff;
-    --nav-bg: #ffffff;
-    --shadow: rgba(0, 0, 0, 0.1);
+    /* Intergalactic Space Theme */
+    --primary: #8b5cf6;
+    /* Cosmic purple */
+    --primary-dark: #7c3aed;
+    /* Deep purple */
+    --secondary: #06b6d4;
+    /* Nebula cyan */
+    --accent: #f472b6;
+    /* Star pink */
+    --accent-gold: #fbbf24;
+    /* Stellar gold */
+    --background: #0f0f1a;
+    /* Deep space */
+    --bg-secondary: #161625;
+    /* Space dust */
+    --surface: #1a1a2e;
+    /* Dark nebula */
+    --text-primary: #f0f0ff;
+    /* Starlight white */
+    --text-secondary: #a5a5c0;
+    /* Cosmic gray */
+    --border-color: #2d2d4a;
+    /* Space border */
+    --card-bg: #1e1e35;
+    /* Nebula card */
+    --nav-bg: rgba(15, 15, 26, 0.95);
+    --shadow: rgba(139, 92, 246, 0.15);
+    --glow-primary: 0 0 20px rgba(139, 92, 246, 0.4);
+    --glow-secondary: 0 0 15px rgba(6, 182, 212, 0.3);
+    --glow-accent: 0 0 15px rgba(244, 114, 182, 0.3);
+    --gradient-nebula: linear-gradient(135deg, #1a1a2e 0%, #2d1f4e 50%, #1a1a2e 100%);
+    --gradient-cosmic: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 50%, #f472b6 100%);
 }
 
-/* Dark Theme Variables */
+/* Dark Theme - Even Deeper Space */
 [data-theme="dark"] {
-    --primary: #ff7b7b;
-    --secondary: #64ffda;
-    --accent: #ffd93d;
-    --background: #121212;
-    --surface: #1e1e1e;
+    --primary: #a78bfa;
+    --primary-dark: #8b5cf6;
+    --secondary: #22d3ee;
+    --accent: #f9a8d4;
+    --background: #050510;
+    --bg-secondary: #0a0a18;
+    --surface: #12122a;
     --text-primary: #ffffff;
-    --text-secondary: #b3b3b3;
-    --border-color: #333333;
-    --card-bg: #1e1e1e;
-    --nav-bg: #1a1a1a;
-    --shadow: rgba(0, 0, 0, 0.3);
+    --text-secondary: #b8b8d0;
+    --border-color: #252545;
+    --card-bg: #151530;
+    --nav-bg: rgba(5, 5, 16, 0.98);
+    --shadow: rgba(167, 139, 250, 0.2);
 }
 
 /* Global Elements */
@@ -3786,4 +3809,554 @@ footer {
     .newsletter-form {
         flex-direction: column;
     }
+}
+
+/* ================================
+   INTERGALACTIC SPACE THEME
+   ================================ */
+
+/* Animated Starfield Background */
+.starfield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.starfield::before,
+.starfield::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+        radial-gradient(2px 2px at 130px 80px, rgba(139, 92, 246, 0.6), transparent),
+        radial-gradient(1px 1px at 160px 120px, #fff, transparent),
+        radial-gradient(2px 2px at 200px 50px, rgba(6, 182, 212, 0.5), transparent),
+        radial-gradient(1px 1px at 250px 160px, #fff, transparent),
+        radial-gradient(2px 2px at 300px 100px, rgba(244, 114, 182, 0.5), transparent);
+    background-size: 350px 350px;
+    animation: twinkle 8s ease-in-out infinite;
+}
+
+.starfield::after {
+    background-size: 450px 450px;
+    animation-delay: -4s;
+    opacity: 0.6;
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.7;
+        transform: translateY(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(-5px);
+    }
+}
+
+/* Cosmic Body Background */
+body {
+    background: var(--background);
+    background-image:
+        radial-gradient(ellipse at top, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom left, rgba(244, 114, 182, 0.06) 0%, transparent 50%);
+    min-height: 100vh;
+}
+
+/* Glowing Buttons */
+.btn-cosmic,
+.shop-now-btn,
+.offer-btn,
+.add-to-cart-btn {
+    background: var(--gradient-cosmic);
+    border: none;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--glow-primary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-cosmic:hover,
+.shop-now-btn:hover,
+.offer-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.6), 0 0 60px rgba(6, 182, 212, 0.3);
+}
+
+/* Space Cards with Glass Effect */
+.space-card,
+.product-card {
+    background: rgba(30, 30, 53, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.space-card:hover,
+.product-card:hover {
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: var(--glow-primary), 0 20px 40px rgba(0, 0, 0, 0.3);
+    transform: translateY(-10px);
+}
+
+/* Cosmic Navigation */
+.store-nav {
+    background: var(--nav-bg);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.store-nav .logo a {
+    background: var(--gradient-cosmic);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+    font-size: 1.6rem;
+}
+
+.nav-link {
+    color: var(--text-secondary) !important;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary) !important;
+    text-shadow: var(--glow-primary);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gradient-cosmic);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* Space Hero Section */
+.store-hero,
+.hero {
+    position: relative;
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a3e 50%, #0f0f1a 100%);
+    overflow: hidden;
+}
+
+.store-hero::before,
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.3) 0%, transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.2) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(244, 114, 182, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.hero-slider .slide-content h2 {
+    text-shadow: 0 0 40px rgba(139, 92, 246, 0.5);
+}
+
+/* Cosmic Section Headers */
+.section-header h2,
+.trending-products h2,
+.new-arrivals h2,
+.featured-categories h2 {
+    background: var(--gradient-cosmic);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+}
+
+/* Space Category Cards */
+.category-card {
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    transition: all 0.4s ease;
+}
+
+.category-card:hover {
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: var(--glow-primary);
+}
+
+.category-info {
+    background: linear-gradient(to top, rgba(15, 15, 26, 0.95), transparent);
+}
+
+/* Cosmic Special Offer */
+.special-offer {
+    background: linear-gradient(135deg, #1a1a3e 0%, #2d1f5e 50%, #1a1a3e 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.special-offer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 10% 90%, rgba(244, 114, 182, 0.3) 0%, transparent 30%),
+        radial-gradient(circle at 90% 10%, rgba(6, 182, 212, 0.3) 0%, transparent 30%);
+    pointer-events: none;
+}
+
+.countdown-item {
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+/* Space Newsletter */
+.newsletter-section {
+    background: linear-gradient(135deg, #0a0a18 0%, #1a1a3e 50%, #0a0a18 100%);
+    position: relative;
+}
+
+.newsletter-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.newsletter-form input {
+    background: rgba(30, 30, 53, 0.8);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: var(--text-primary);
+}
+
+.newsletter-form input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: var(--glow-primary);
+}
+
+.newsletter-form button {
+    background: var(--gradient-cosmic);
+    box-shadow: var(--glow-primary);
+}
+
+/* Space Footer */
+.landing-footer {
+    background: linear-gradient(to bottom, var(--bg-secondary), var(--background));
+    border-top: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.social-links a {
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--primary);
+    text-shadow: var(--glow-primary);
+    transform: translateY(-3px);
+}
+
+/* Features Banner Space Style */
+.features-banner {
+    background: var(--bg-secondary);
+    border-top: 1px solid rgba(139, 92, 246, 0.1);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+.feature i {
+    background: var(--gradient-cosmic);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Cosmic Search Bar */
+.search-bar {
+    background: rgba(30, 30, 53, 0.6);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 25px;
+    overflow: hidden;
+}
+
+.search-bar input {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+}
+
+.search-bar input::placeholder {
+    color: var(--text-secondary);
+}
+
+.search-bar button {
+    background: var(--primary);
+    border: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.search-bar button:hover {
+    background: var(--primary-dark);
+}
+
+/* Cart Sidebar Space Theme */
+.cart-sidebar {
+    background: rgba(15, 15, 26, 0.98);
+    backdrop-filter: blur(20px);
+    border-left: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.cart-header {
+    border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.checkout-btn {
+    background: var(--gradient-cosmic) !important;
+    box-shadow: var(--glow-primary);
+}
+
+/* Space Theme Toggle */
+.theme-toggle {
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: var(--primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--primary);
+    color: white;
+    box-shadow: var(--glow-primary);
+}
+
+/* Floating Animation for Cards */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.product-card:hover {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Pulse Animation for CTAs */
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: var(--glow-primary);
+    }
+
+    50% {
+        box-shadow: 0 0 40px rgba(139, 92, 246, 0.7), 0 0 80px rgba(6, 182, 212, 0.4);
+    }
+}
+
+.shop-now-btn,
+.offer-btn {
+    animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Space Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* ================================
+   Checkout Modal
+   ================================ */
+.checkout-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.checkout-modal.active {
+    opacity: 1;
+}
+
+.checkout-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.checkout-content {
+    position: relative;
+    background: var(--card-bg, #1e1e35);
+    border: 1px solid var(--border-color, #2d2d4a);
+    border-radius: 20px;
+    padding: 2.5rem;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.2);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.checkout-modal.active .checkout-content {
+    transform: translateY(0);
+}
+
+.checkout-content h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-primary, #f0f0ff);
+}
+
+.checkout-content h2 i {
+    color: var(--primary, #8b5cf6);
+}
+
+.checkout-summary {
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--text-primary, #f0f0ff);
+}
+
+.checkout-form .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.checkout-form .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary, #a5a5c0);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.checkout-form .form-group input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background: var(--background, #0f0f1a);
+    border: 1px solid var(--border-color, #2d2d4a);
+    border-radius: 10px;
+    color: var(--text-primary, #f0f0ff);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.checkout-form .form-group input:focus {
+    outline: none;
+    border-color: var(--primary, #8b5cf6);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+}
+
+.checkout-submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 50%, #f472b6 100%);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.checkout-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+}
+
+.checkout-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.checkout-content .close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary, #a5a5c0);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.checkout-content .close-modal:hover {
+    color: var(--primary, #8b5cf6);
 }

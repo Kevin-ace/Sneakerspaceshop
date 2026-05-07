@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account | SneakerSpace</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="assets/js/api.js" defer></script>
+    <style>
+        .account-page{min-height:100vh;background:var(--background);padding:2rem 5%}
+        .account-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:1rem}
+        .account-header h1{font-size:2rem;color:var(--text-primary)}
+        .account-nav{display:flex;gap:1rem;align-items:center}
+        .account-nav a{color:var(--text-secondary);text-decoration:none;padding:0.5rem 1rem;border-radius:10px;transition:all 0.3s}
+        .account-nav a:hover{color:var(--primary);background:rgba(139,92,246,0.1)}
+        .btn-logout{background:rgba(239,68,68,0.15);color:#ef4444;border:none;padding:0.5rem 1rem;border-radius:10px;cursor:pointer;transition:all 0.3s}
+        .btn-logout:hover{background:#ef4444;color:#fff}
+        .profile-card{background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;padding:1.5rem;margin-bottom:2rem;display:flex;align-items:center;gap:1.5rem}
+        .profile-avatar{width:60px;height:60px;border-radius:14px;background:linear-gradient(135deg,#8b5cf6,#06b6d4);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:#fff}
+        .profile-info h2{font-size:1.2rem;margin-bottom:0.25rem}
+        .profile-info p{color:var(--text-secondary);font-size:0.9rem}
+        .orders-section h2{font-size:1.3rem;margin-bottom:1rem;color:var(--text-primary)}
+        .order-card{background:var(--card-bg);border:1px solid var(--border-color);border-radius:14px;padding:1.25rem;margin-bottom:1rem;transition:all 0.3s;cursor:pointer;text-decoration:none;display:block;color:inherit}
+        .order-card:hover{border-color:rgba(139,92,246,0.5);box-shadow:0 0 15px rgba(139,92,246,0.15);transform:translateY(-2px)}
+        .order-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem}
+        .order-id{font-weight:700;font-size:1rem}
+        .order-date{color:var(--text-secondary);font-size:0.85rem}
+        .order-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem}
+        .order-total{font-weight:700;color:var(--primary)}
+        .status-badge{padding:0.3rem 0.8rem;border-radius:20px;font-size:0.8rem;font-weight:600}
+        .status-pending{background:rgba(250,204,21,0.2);color:#facc15}
+        .status-processing{background:rgba(59,130,246,0.2);color:#3b82f6}
+        .status-shipped{background:rgba(168,85,247,0.2);color:#a855f7}
+        .status-delivered{background:rgba(34,197,94,0.2);color:#22c55e}
+        .status-cancelled{background:rgba(239,68,68,0.2);color:#ef4444}
+        .empty-state{text-align:center;padding:4rem;color:var(--text-secondary)}
+        .empty-state i{font-size:3rem;margin-bottom:1rem;opacity:0.3}
+        .empty-state .shop-btn{display:inline-block;margin-top:1rem;padding:0.75rem 2rem;background:linear-gradient(135deg,#8b5cf6,#06b6d4);color:#fff;border-radius:25px;text-decoration:none;font-weight:600}
+        .order-items-preview{color:var(--text-secondary);font-size:0.85rem;margin-top:0.5rem}
+        .loading{text-align:center;padding:3rem;color:var(--text-secondary)}
+    </style>
+</head>
+<body>
+    <div class="account-page">
+        <div class="account-header">
+            <h1>🚀 My Account</h1>
+            <div class="account-nav">
+                <a href="home.html"><i class="fas fa-store"></i> Store</a>
+                <a href="shop.html"><i class="fas fa-shopping-bag"></i> Shop</a>
+                <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+        <div class="profile-card" id="profileCard" style="display:none">
+            <div class="profile-avatar" id="profileAvatar"></div>
+            <div class="profile-info">
+                <h2 id="profileName"></h2>
+                <p id="profileEmail"></p>
+            </div>
+        </div>
+        <div class="orders-section">
+            <h2><i class="fas fa-box"></i> My Orders</h2>
+            <div id="ordersContainer"><div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div></div>
+        </div>
+    </div>
+    <script>
+        async function loadAccount(){
+            try{
+                const r=await fetch('/api/auth/status');const d=await r.json();
+                if(!d.logged_in){window.location.href='account-login.html';return}
+                const c=d.customer;
+                document.getElementById('profileCard').style.display='flex';
+                document.getElementById('profileAvatar').textContent=c.name[0].toUpperCase();
+                document.getElementById('profileName').textContent=c.name;
+                document.getElementById('profileEmail').textContent=c.email;
+                loadOrders();
+            }catch(e){window.location.href='account-login.html'}
+        }
+        async function loadOrders(){
+            const container=document.getElementById('ordersContainer');
+            try{
+                const r=await fetch('/api/account/orders');const orders=await r.json();
+                if(!orders.length){container.innerHTML='<div class="empty-state"><i class="fas fa-box-open"></i><h3>No orders yet</h3><p>Start shopping to see your orders here!</p><a href="shop.html" class="shop-btn">Browse Shop</a></div>';return}
+                container.innerHTML=orders.map(o=>`
+                    <a href="order-detail.html?id=${o.id}" class="order-card">
+                        <div class="order-top">
+                            <span class="order-id">Order #${o.id}</span>
+                            <span class="order-date">${new Date(o.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</span>
+                        </div>
+                        <div class="order-bottom">
+                            <span class="order-total">Ksh ${o.total.toLocaleString()}</span>
+                            <span class="status-badge status-${o.status}">${o.status.charAt(0).toUpperCase()+o.status.slice(1)}</span>
+                        </div>
+                        <div class="order-items-preview">${o.items.map(i=>i.product_name).join(', ')}</div>
+                    </a>
+                `).join('');
+            }catch(e){container.innerHTML='<p style="color:#ef4444">Failed to load orders</p>'}
+        }
+        async function logout(){
+            await fetch('/api/auth/logout',{method:'POST'});
+            window.location.href='home.html';
+        }
+        loadAccount();
+    </script>
+</body>
+</html>

@@ -1,0 +1,284 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<div class="header">
+    <h1>📬 Messages Inbox</h1>
+    <div class="header-actions">
+        <span class="message-count-badge">
+            {{ messages | selectattr('is_read', 'equalto', false) | list | length }} unread
+        </span>
+    </div>
+</div>
+
+{% if messages %}
+<div class="messages-container">
+    {% for msg in messages %}
+    <div class="message-card {{ 'unread' if not msg.is_read else 'read' }}" data-id="{{ msg.id }}">
+        <div class="message-header">
+            <div class="message-sender">
+                <div class="sender-avatar {{ 'unread-dot' if not msg.is_read }}">
+                    {{ msg.name[0] | upper }}
+                </div>
+                <div class="sender-info">
+                    <h4>{{ msg.name }}</h4>
+                    <span class="sender-email">{{ msg.email }}</span>
+                </div>
+            </div>
+            <div class="message-meta">
+                <span class="message-date">
+                    <i class="fas fa-clock"></i>
+                    {{ msg.created_at.strftime('%b %d, %Y %H:%M') }}
+                </span>
+                <span class="message-subject-badge">{{ msg.subject }}</span>
+            </div>
+        </div>
+        <div class="message-body">
+            <p>{{ msg.message }}</p>
+            {% if msg.phone %}
+            <span class="message-phone"><i class="fas fa-phone"></i> {{ msg.phone }}</span>
+            {% endif %}
+        </div>
+        <div class="message-actions">
+            {% if not msg.is_read %}
+            <button class="btn btn-sm btn-mark-read" onclick="markRead({{ msg.id }})">
+                <i class="fas fa-check"></i> Mark as Read
+            </button>
+            {% else %}
+            <span class="read-badge"><i class="fas fa-check-double"></i> Read</span>
+            {% endif %}
+            <a href="mailto:{{ msg.email }}" class="btn btn-sm btn-reply">
+                <i class="fas fa-reply"></i> Reply
+            </a>
+            <button class="btn btn-sm btn-delete" onclick="deleteMessage({{ msg.id }})">
+                <i class="fas fa-trash"></i> Delete
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="panel" style="text-align: center; padding: 4rem;">
+    <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; color: var(--text-secondary);"></i>
+    <h3 style="color: var(--text-secondary); margin-bottom: 0.5rem;">No messages yet</h3>
+    <p style="color: var(--text-secondary); opacity: 0.7;">Messages from the contact form will appear here.</p>
+</div>
+{% endif %}
+
+<style>
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .message-count-badge {
+        background: rgba(139, 92, 246, 0.2);
+        color: var(--primary);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .messages-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .message-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .message-card.unread {
+        border-left: 4px solid var(--primary);
+        background: rgba(139, 92, 246, 0.05);
+    }
+
+    .message-card:hover {
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+    }
+
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .message-sender {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .sender-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        background: var(--gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: white;
+        position: relative;
+    }
+
+    .sender-avatar.unread-dot::after {
+        content: '';
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        width: 12px;
+        height: 12px;
+        background: #22c55e;
+        border-radius: 50%;
+        border: 2px solid var(--bg-card);
+    }
+
+    .sender-info h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.15rem;
+    }
+
+    .sender-email {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+
+    .message-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .message-date {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .message-subject-badge {
+        background: rgba(6, 182, 212, 0.2);
+        color: #06b6d4;
+        padding: 0.3rem 0.6rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        text-transform: capitalize;
+    }
+
+    .message-body {
+        padding: 1rem 0;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 1rem;
+    }
+
+    .message-body p {
+        color: var(--text-primary);
+        line-height: 1.7;
+        white-space: pre-wrap;
+    }
+
+    .message-phone {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin-top: 0.75rem;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+
+    .message-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-mark-read {
+        background: rgba(34, 197, 94, 0.2);
+        color: #22c55e;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-mark-read:hover {
+        background: #22c55e;
+        color: white;
+    }
+
+    .btn-reply {
+        background: rgba(6, 182, 212, 0.2);
+        color: #06b6d4;
+        border: none;
+        text-decoration: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-reply:hover {
+        background: #06b6d4;
+        color: white;
+    }
+
+    .read-badge {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.4rem 0.8rem;
+    }
+</style>
+
+<script>
+    async function markRead(id) {
+        try {
+            const response = await fetch(`/admin/api/messages/${id}/read`, { method: 'POST' });
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Failed to mark as read');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error marking message as read');
+        }
+    }
+
+    async function deleteMessage(id) {
+        if (!confirm('Delete this message?')) return;
+        try {
+            const response = await fetch(`/admin/api/messages/${id}`, { method: 'DELETE' });
+            if (response.ok) {
+                const card = document.querySelector(`[data-id="${id}"]`);
+                if (card) {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateX(50px)';
+                    setTimeout(() => card.remove(), 300);
+                }
+            } else {
+                alert('Failed to delete message');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error deleting message');
+        }
+    }
+</script>
+{% endblock %}
