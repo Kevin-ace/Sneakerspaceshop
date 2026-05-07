@@ -89,49 +89,6 @@ Default admin: `admin` / `admin` (change in `.env`)
 
 ---
 
-## Deploy to Render (Free)
-
-### One-Click Deploy
-
-1. Push your code to GitHub
-2. Go to [render.com/blueprints](https://dashboard.render.com/blueprints)
-3. Click **New Blueprint Instance**
-4. Connect your GitHub repo (`Kevin-ace/Sneakerspaceshop`)
-5. Render auto-detects the `render.yaml` and creates:
-   - A **Web Service** (Python + gunicorn)
-   - A **PostgreSQL database** (free tier)
-6. Set the `ADMIN_PASSWORD` environment variable when prompted
-7. Click **Apply** — deploy takes ~3 minutes
-
-### Manual Deploy
-
-1. Go to [render.com](https://render.com) → **New +** → **Web Service**
-2. Connect your GitHub repo
-3. Configure:
-   - **Build Command:** `./build.sh`
-   - **Start Command:** `cd backend && gunicorn run:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120`
-4. Add a **PostgreSQL** database (New + → PostgreSQL)
-5. Set environment variables:
-   | Variable | Value |
-   |----------|-------|
-   | `DATABASE_URL` | (copy Internal URL from your Render PostgreSQL) |
-   | `SECRET_KEY` | (click Generate) |
-   | `FLASK_ENV` | `production` |
-   | `ADMIN_USERNAME` | `admin` |
-   | `ADMIN_PASSWORD` | (your strong password) |
-6. Click **Deploy**
-
-### Auto-Deploy from GitHub
-
-Once connected, Render **auto-deploys on every push to `main`**. To configure:
-- Go to your service → **Settings** → **Build & Deploy**
-- **Auto-Deploy**: `Yes` (default)
-- **Branch**: `main`
-
-Every `git push origin main` triggers a new deployment automatically.
-
----
-
 ## Project Structure
 
 ```
