@@ -4,7 +4,7 @@
 from flask import (render_template, url_for, flash, redirect, request,
                    jsonify, Blueprint, make_response, send_from_directory,
                    current_app, abort)
-from app import db, bcrypt, limiter
+from app import db, bcrypt, limiter, csrf
 from app.models import Product, Admin, Customer, Order, OrderItem, Offer, ContactMessage, ChatMessage
 from app.forms import LoginForm, ProductForm, CustomerRegisterForm, CustomerLoginForm
 from functools import wraps
@@ -115,13 +115,15 @@ def add_security_headers(response):
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-Frame-Options'] = 'DENY'
     response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
     response.headers['Content-Security-Policy'] = (
         "default-src 'self'; "
         "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
         "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; "
         "img-src 'self' data: https: blob:; "
         "font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; "
-        "frame-src https://www.google.com"
+        "frame-src https://www.google.com; "
+        "connect-src 'self' https://*.stockx.com"
     )
     return response
 
@@ -129,6 +131,41 @@ def add_security_headers(response):
 @bp.after_request
 def apply_security_headers(response):
     return add_security_headers(response)
+
+# ================================
+# SEO UTILITIES
+# ================================
+
+@bp.route('/robots.txt')
+@csrf.exempt
+def robots_txt():
+    """Generate robots.txt for search engines."""
+    content = "User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /api/\n\nSitemap: https://sneakerspace.co.ke/sitemap.xml"
+    return make_response(content, 200, {'Content-Type': 'text/plain'})
+
+@bp.route('/sitemap.xml')
+@csrf.exempt
+def sitemap_xml():
+    """Generate sitemap.xml dynamically."""
+    pages = []
+    # Static pages
+    for page in ['home.html', 'shop.html', 'about.html', 'contact.html', 'categories.html']:
+        pages.append({'loc': f'https://sneakerspace.co.ke/{page}', 'lastmod': datetime.now().date().isoformat()})
+    
+    # Product pages
+    products = Product.query.all()
+    for product in products:
+        pages.append({
+            'loc': f'https://sneakerspace.co.ke/product-detail.html?id={product.id}',
+            'lastmod': (product.created_at or datetime.now()).date().isoformat()
+        })
+
+    sitemap_template = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    for page in pages:
+        sitemap_template += f'  <url>\n    <loc>{page["loc"]}</loc>\n    <lastmod>{page["lastmod"]}</lastmod>\n    <changefreq>weekly</changefreq>\n  </url>\n'
+    sitemap_template += '</urlset>'
+
+    return make_response(sitemap_template, 200, {'Content-Type': 'application/xml'})
 
 # ================================
 # FRONTEND STATIC FILE SERVING
@@ -141,6 +178,7 @@ def home():
     return send_from_directory(project_root, 'index.html')
 
 @bp.route('/<path:filename>')
+@csrf.exempt
 def serve_frontend(filename):
     """Serve frontend static files (HTML, CSS, JS, images)."""
     project_root = current_app.config.get('PROJECT_ROOT', '')
@@ -177,6 +215,7 @@ def serve_chat_upload(filename):
 # ================================
 
 @bp.route('/api/products')
+@csrf.exempt
 def api_products():
     """Fetch all products."""
     try:
@@ -189,6 +228,7 @@ def api_products():
         return jsonify({'error': 'Failed to fetch products'}), 500
 
 @bp.route('/api/products/<int:product_id>')
+@csrf.exempt
 def api_product_detail(product_id):
     """Get a single product by ID."""
     product = Product.query.get(product_id)
@@ -197,6 +237,7 @@ def api_product_detail(product_id):
     return jsonify(sanitize_output(product.to_dict()))
 
 @bp.route('/api/products/category/<category>')
+@csrf.exempt
 def api_products_by_category(category):
     """Get products by category."""
     safe_category = sanitize_input(category)
@@ -209,6 +250,7 @@ def api_products_by_category(category):
     return jsonify([sanitize_output(p.to_dict()) for p in products])
 
 @bp.route('/api/products/search')
+@csrf.exempt
 def api_search_products():
     """Search products securely."""
     query = request.args.get('q', '')
@@ -229,6 +271,7 @@ def api_search_products():
     return jsonify([sanitize_output(p.to_dict()) for p in products])
 
 @bp.route('/api/offers/active')
+@csrf.exempt
 def api_active_offers():
     """Get active offers for the storefront."""
     now = datetime.now(timezone.utc)
@@ -238,6 +281,32 @@ def api_active_offers():
         Offer.end_date >= now
     ).all()
     return jsonify([sanitize_output(o.to_dict()) for o in offers])
+
+@bp.route('/api/products/trending')
+def api_trending_products():
+    """Get products marked as trending for the home page."""
+    products = Product.query.filter_by(is_trending=True).order_by(Product.id.desc()).all()
+    return jsonify([sanitize_output(p.to_dict()) for p in products])
+
+@bp.route('/api/products/new-arrivals')
+def api_new_arrival_products():
+    """Get products marked as new arrivals for the home page."""
+    products = Product.query.filter_by(is_new_arrival=True).order_by(Product.id.desc()).all()
+    return jsonify([sanitize_output(p.to_dict()) for p in products])
+
+@bp.route('/api/offers/homepage')
+def api_homepage_offer():
+    """Get the single active offer designated as the homepage banner."""
+    now = datetime.now(timezone.utc)
+    offer = Offer.query.filter(
+        Offer.is_active == True,
+        Offer.is_homepage_banner == True,
+        Offer.start_date <= now,
+        Offer.end_date >= now
+    ).first()
+    if offer:
+        return jsonify(sanitize_output(offer.to_dict()))
+    return jsonify(None)
 
 # ================================
 # CHECKOUT API
@@ -548,12 +617,29 @@ def api_stats():
     total_revenue = db.session.query(func.sum(Order.total)).scalar() or 0
     active_offers = Offer.query.filter_by(is_active=True).count()
     unread_messages = ContactMessage.query.filter_by(is_read=False).count()
+    
+    # Pie chart data
+    in_stock_count = db.session.query(func.sum(Product.stock)).scalar() or 0
+    
+    processing_count = db.session.query(func.sum(OrderItem.quantity)).join(Order).filter(
+        Order.status == 'processing'
+    ).scalar() or 0
+    
+    shipping_count = db.session.query(func.sum(OrderItem.quantity)).join(Order).filter(
+        Order.status == 'shipped'
+    ).scalar() or 0
+
     return jsonify({
         'total_products': total_products,
         'total_orders': total_orders,
         'total_revenue': total_revenue,
         'active_offers': active_offers,
-        'unread_messages': unread_messages
+        'unread_messages': unread_messages,
+        'pie_data': {
+            'in_stock': int(in_stock_count),
+            'processing': int(processing_count),
+            'shipping': int(shipping_count)
+        }
     })
 
 @bp.route('/admin/api/sales-chart')
@@ -640,6 +726,68 @@ def api_toggle_offer(offer_id):
     return jsonify(sanitize_output(offer.to_dict()))
 
 # ================================
+# STOREFRONT MANAGEMENT
+# ================================
+
+@bp.route('/admin/storefront')
+@login_required
+@admin_required
+def admin_storefront():
+    """Storefront Manager page — curate Trending, New Arrivals, and Homepage Offer."""
+    products = Product.query.order_by(Product.id.desc()).all()
+    # Show ALL active offers in the admin dropdown (not date-filtered).
+    # Date filtering only applies on the public /api/offers/homepage endpoint.
+    active_offers = Offer.query.filter(
+        Offer.is_active == True
+    ).order_by(Offer.created_at.desc()).all()
+    return render_template('admin/storefront.html',
+                         title='Storefront',
+                         products=products,
+                         active_offers=active_offers)
+
+@bp.route('/admin/api/products/<int:product_id>/toggle-trending', methods=['POST'])
+@login_required
+@admin_required
+def api_toggle_trending(product_id):
+    """Toggle a product's trending status."""
+    product = Product.query.get_or_404(product_id)
+    product.is_trending = not product.is_trending
+    db.session.commit()
+    return jsonify(sanitize_output(product.to_dict()))
+
+@bp.route('/admin/api/products/<int:product_id>/toggle-new-arrival', methods=['POST'])
+@login_required
+@admin_required
+def api_toggle_new_arrival(product_id):
+    """Toggle a product's new arrival status."""
+    product = Product.query.get_or_404(product_id)
+    product.is_new_arrival = not product.is_new_arrival
+    db.session.commit()
+    return jsonify(sanitize_output(product.to_dict()))
+
+@bp.route('/admin/api/offers/<int:offer_id>/set-homepage-banner', methods=['POST'])
+@login_required
+@admin_required
+def api_set_homepage_banner(offer_id):
+    """Set this offer as the homepage banner (unsets all others)."""
+    # Clear all existing homepage banners
+    Offer.query.update({Offer.is_homepage_banner: False})
+    # Set the selected one
+    offer = Offer.query.get_or_404(offer_id)
+    offer.is_homepage_banner = True
+    db.session.commit()
+    return jsonify(sanitize_output(offer.to_dict()))
+
+@bp.route('/admin/api/offers/clear-homepage-banner', methods=['POST'])
+@login_required
+@admin_required
+def api_clear_homepage_banner():
+    """Clear all homepage banner designations."""
+    Offer.query.update({Offer.is_homepage_banner: False})
+    db.session.commit()
+    return jsonify({'message': 'Homepage banner cleared'})
+
+# ================================
 # ORDERS MANAGEMENT
 # ================================
 
@@ -655,12 +803,31 @@ def api_update_order_status(order_id):
     order = Order.query.get_or_404(order_id)
     data = request.get_json()
 
-    status = sanitize_input(data.get('status'))
+    new_status = sanitize_input(data.get('status'))
     valid_statuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
-    if status not in valid_statuses:
+    if new_status not in valid_statuses:
         return jsonify({'error': 'Invalid status'}), 400
 
-    order.status = status
+    old_status = order.status
+    
+    # Inventory Tracking Logic
+    # Transitioning TO Shipped/Delivered (passed the shipped phase)
+    if new_status in ['shipped', 'delivered'] and old_status not in ['shipped', 'delivered']:
+        for item in order.items:
+            product = Product.query.get(item.product_id)
+            if product:
+                product.stock = (product.stock or 0) - item.quantity
+                if product.stock < 0:
+                    product.stock = 0 # Prevent negative stock
+    
+    # Reverting FROM Shipped/Delivered to something earlier OR Cancelled
+    elif old_status in ['shipped', 'delivered'] and new_status not in ['shipped', 'delivered']:
+        for item in order.items:
+            product = Product.query.get(item.product_id)
+            if product:
+                product.stock = (product.stock or 0) + item.quantity
+
+    order.status = new_status
     db.session.commit()
     return jsonify(sanitize_output(order.to_dict()))
 
@@ -726,6 +893,7 @@ def seed_demo_data():
 # ================================
 
 @bp.route('/api/auth/status')
+@csrf.exempt
 def api_auth_status():
     """Check if customer is logged in."""
     if current_user.is_authenticated and getattr(current_user, 'role', None) == 'customer':
@@ -794,6 +962,7 @@ def customer_login():
 # ================================
 
 @bp.route('/api/account/orders')
+@csrf.exempt
 def api_customer_orders():
     """Get orders for the logged-in customer."""
     if not current_user.is_authenticated or getattr(current_user, 'role', None) != 'customer':
@@ -802,6 +971,7 @@ def api_customer_orders():
     return jsonify([sanitize_output(o.to_dict()) for o in orders])
 
 @bp.route('/api/account/orders/<int:order_id>')
+@csrf.exempt
 def api_customer_order_detail(order_id):
     """Get a specific order for the logged-in customer."""
     if not current_user.is_authenticated or getattr(current_user, 'role', None) != 'customer':
@@ -816,6 +986,7 @@ def api_customer_order_detail(order_id):
 # ================================
 
 @bp.route('/api/chat/<int:order_id>/messages')
+@csrf.exempt
 def api_chat_messages(order_id):
     """Get chat messages for an order."""
     if not current_user.is_authenticated:

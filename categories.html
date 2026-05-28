@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="assets/css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/product-renderer.js" defer></script>
     <script src="assets/js/theme.js" defer></script>
     <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/main.js" defer></script>
@@ -192,6 +193,7 @@
                     setTimeout(() => {
                         if (typeof ProductRenderer !== 'undefined') {
                             ProductRenderer.renderProducts(products, productsGrid);
+                            if (window.ScrollAnimations) ScrollAnimations.observeAll();
                         }
                     }, 300);
                 }

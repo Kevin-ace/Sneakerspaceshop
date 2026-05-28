@@ -17,9 +17,15 @@ const theme = {
 
     apply() {
         document.documentElement.setAttribute('data-theme', this.current);
-        const themeToggle = document.querySelector('.theme-toggle i');
+        const themeToggle = document.querySelector('.theme-toggle i, #themeToggle i');
         if (themeToggle) {
             themeToggle.className = this.current === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+        
+        // Update starfield if it exists
+        const starfield = document.querySelector('.starfield');
+        if (starfield) {
+            starfield.style.opacity = this.current === 'light' ? '0.3' : '1';
         }
     },
 
@@ -27,7 +33,10 @@ const theme = {
         this.apply();
         const themeToggle = document.getElementById('themeToggle');
         if (themeToggle) {
-            themeToggle.addEventListener('click', () => this.toggle());
+            themeToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggle();
+            });
         }
     }
 };
@@ -348,15 +357,25 @@ const ProductManager = {
     allProducts: [],
     currentFilters: {
         categories: [],
+        brands: [],
+        sizes: [],
         minPrice: 0,
         maxPrice: 100000,
         sortBy: 'featured'
     },
 
     async init() {
+        console.log('ProductManager: Initializing...');
+        
         // Load products from API
         if (typeof API !== 'undefined') {
-            this.allProducts = await API.getProducts();
+            try {
+                this.allProducts = await API.getProducts();
+                console.log('ProductManager: Fetched', this.allProducts.length, 'products');
+            } catch (error) {
+                console.error('ProductManager: Failed to fetch products', error);
+                this.allProducts = [];
+            }
         }
 
         // Initialize filters
@@ -364,83 +383,147 @@ const ProductManager = {
         this.initSearch();
 
         // Load products into different sections
+        this.renderAllSections();
+    },
+
+    async renderAllSections() {
         await this.loadShopProducts();
         await this.loadFeaturedProducts();
         await this.loadNewArrivals();
         await this.loadTrendingProducts();
+        await this.loadSpecialOffer();
     },
 
     async loadShopProducts() {
         const container = document.querySelector('.shelf-products, .products-grid');
-        if (!container || typeof ProductRenderer === 'undefined') return;
+        if (!container) return;
+
+        if (typeof ProductRenderer === 'undefined') {
+            console.error('ProductRenderer not found');
+            return;
+        }
 
         ProductRenderer.showLoading(container, 6);
 
-        let products = this.allProducts;
-        products = this.applyFilters(products);
-        products = this.applySort(products);
-
+        // Allow a small delay for the loading animation to be seen
         setTimeout(() => {
+            let products = [...this.allProducts];
+            products = this.applyFilters(products);
+            products = this.applySort(products);
+
             ProductRenderer.renderProducts(products, container);
-            wishlist.init();
-        }, 500);
+            
+            // Re-initialize wishlist icons
+            if (window.wishlist && typeof wishlist.init === 'function') {
+                wishlist.init();
+            }
+            
+            // Re-initialize scroll animations for new elements
+            if (window.ScrollAnimations && typeof ScrollAnimations.observeAll === 'function') {
+                ScrollAnimations.observeAll();
+            }
+        }, 300);
     },
 
     async loadFeaturedProducts() {
         const container = document.querySelector('.featured-grid');
-        if (!container || typeof API === 'undefined') return;
+        if (!container || typeof API === 'undefined' || typeof ProductRenderer === 'undefined') return;
 
         const products = await API.getFeaturedProducts(4);
-        if (products.length > 0 && typeof ProductRenderer !== 'undefined') {
-            ProductRenderer.renderProducts(products, container);
-        }
+        ProductRenderer.renderProducts(products, container);
+        if (window.ScrollAnimations) ScrollAnimations.observeAll();
     },
 
     async loadNewArrivals() {
         const container = document.querySelector('.products-slider');
-        if (!container || typeof API === 'undefined') return;
+        if (!container || typeof API === 'undefined' || typeof ProductRenderer === 'undefined') return;
 
-        ProductRenderer.showLoading(container, 4);
-        const products = await API.getNewArrivals(6);
-
-        setTimeout(() => {
-            if (typeof ProductRenderer !== 'undefined') {
-                ProductRenderer.renderProducts(products, container);
-            }
-        }, 300);
+        const products = await API.getNewArrivals();
+        if (products.length > 0) {
+            ProductRenderer.renderProducts(products, container);
+        } else {
+            container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 2rem; grid-column: 1/-1;">No new arrivals yet. Check back soon!</p>';
+        }
+        if (window.ScrollAnimations) ScrollAnimations.observeAll();
     },
 
     async loadTrendingProducts() {
         const container = document.querySelector('.trending-products .products-grid');
-        if (!container || typeof API === 'undefined') return;
+        if (!container || typeof API === 'undefined' || typeof ProductRenderer === 'undefined') return;
 
-        ProductRenderer.showLoading(container, 4);
-        const products = await API.getFeaturedProducts(4);
+        const products = await API.getTrendingProducts();
+        if (products.length > 0) {
+            ProductRenderer.renderProducts(products, container);
+        } else {
+            container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 2rem; grid-column: 1/-1;">No trending products yet. Check back soon!</p>';
+        }
+        if (window.ScrollAnimations) ScrollAnimations.observeAll();
+    },
 
-        setTimeout(() => {
-            if (typeof ProductRenderer !== 'undefined') {
-                ProductRenderer.renderProducts(products, container);
+    async loadSpecialOffer() {
+        if (typeof API === 'undefined' || typeof API.getHomepageOffer !== 'function') return;
+
+        const section = document.getElementById('specialOfferSection');
+        if (!section) return;
+
+        try {
+            const offer = await API.getHomepageOffer();
+            if (!offer) {
+                section.style.display = 'none';
+                return;
             }
-        }, 300);
+
+            // Populate the banner
+            const titleEl = document.getElementById('offerTitle');
+            const descEl = document.getElementById('offerDescription');
+            const codeWrap = document.getElementById('offerCodeWrap');
+            const codeEl = document.getElementById('offerCode');
+
+            if (titleEl) titleEl.textContent = offer.title || 'Special Offer';
+            if (descEl) descEl.textContent = offer.description || `Get ${offer.discount_percent}% off on selected items!`;
+
+            if (offer.code && codeWrap && codeEl) {
+                codeEl.textContent = offer.code;
+                codeWrap.style.display = 'block';
+            }
+
+            // Show the section
+            section.style.display = '';
+
+            // Start real countdown
+            if (offer.end_date && typeof startOfferCountdown === 'function') {
+                startOfferCountdown(offer.end_date);
+            }
+        } catch (error) {
+            console.error('Failed to load special offer:', error);
+            section.style.display = 'none';
+        }
     },
 
     applyFilters(products) {
-        let filtered = [...products];
+        return products.filter(p => {
+            // Category filter
+            const matchesCategory = this.currentFilters.categories.length === 0 || 
+                this.currentFilters.categories.includes(p.category.toLowerCase());
+            
+            // Brand filter (Checking name and description for brand keywords)
+            const matchesBrand = this.currentFilters.brands.length === 0 || 
+                this.currentFilters.brands.some(brand => 
+                    p.name.toLowerCase().includes(brand.toLowerCase()) || 
+                    (p.description && p.description.toLowerCase().includes(brand.toLowerCase()))
+                );
 
-        // Category filter
-        if (this.currentFilters.categories.length > 0) {
-            filtered = filtered.filter(p =>
-                this.currentFilters.categories.includes(p.category.toLowerCase())
-            );
-        }
+            // Price filter
+            const matchesPrice = p.price >= this.currentFilters.minPrice && 
+                               p.price <= this.currentFilters.maxPrice;
 
-        // Price filter
-        filtered = filtered.filter(p =>
-            p.price >= this.currentFilters.minPrice &&
-            p.price <= this.currentFilters.maxPrice
-        );
+            // Size filter (Note: In a real app, products would have explicit sizes. 
+            // Here we assume all products are available in all sizes for the demo, 
+            // but we implement the logic for completeness)
+            const matchesSize = this.currentFilters.sizes.length === 0 || true; 
 
-        return filtered;
+            return matchesCategory && matchesBrand && matchesPrice && matchesSize;
+        });
     },
 
     applySort(products) {
@@ -457,10 +540,10 @@ const ProductManager = {
                 sorted.sort((a, b) => a.name.localeCompare(b.name));
                 break;
             case 'newest':
-                sorted.sort((a, b) => b.id - a.id);
+                sorted.sort((a, b) => (b.id || 0) - (a.id || 0));
                 break;
             default:
-                // Featured - no specific sort
+                // Featured/Default
                 break;
         }
 
@@ -469,7 +552,7 @@ const ProductManager = {
 
     initFilters() {
         // Category checkboxes
-        const categoryFilters = document.querySelectorAll('.filter-group input[type="checkbox"]');
+        const categoryFilters = document.querySelectorAll('.filter-group input[value="running"], .filter-group input[value="basketball"], .filter-group input[value="lifestyle"], .filter-group input[value="casual"], .filter-group input[value="training"], .filter-group input[value="boots"]');
         categoryFilters.forEach(filter => {
             filter.addEventListener('change', () => {
                 this.currentFilters.categories = Array.from(categoryFilters)
@@ -479,15 +562,40 @@ const ProductManager = {
             });
         });
 
+        // Brand checkboxes
+        const brandFilters = document.querySelectorAll('.filter-group input[value="nike"], .filter-group input[value="adidas"], .filter-group input[value="jordan"], .filter-group input[value="vans"], .filter-group input[value="puma"]');
+        brandFilters.forEach(filter => {
+            filter.addEventListener('change', () => {
+                this.currentFilters.brands = Array.from(brandFilters)
+                    .filter(f => f.checked)
+                    .map(f => f.value.toLowerCase());
+                this.loadShopProducts();
+            });
+        });
+
+        // Size buttons
+        const sizeButtons = document.querySelectorAll('.size-filter-btn');
+        sizeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Toggle active class is already handled in shop.html script, but we need the data
+                setTimeout(() => {
+                    this.currentFilters.sizes = Array.from(document.querySelectorAll('.size-filter-btn.active'))
+                        .map(b => b.dataset.size);
+                    this.loadShopProducts();
+                }, 50);
+            });
+        });
+
         // Price slider
         const priceSlider = document.querySelector('.price-slider');
         const priceValue = document.getElementById('priceValue');
         if (priceSlider && priceValue) {
             priceSlider.addEventListener('input', (e) => {
                 const value = parseInt(e.target.value);
-                priceValue.textContent = value.toLocaleString();
                 this.currentFilters.maxPrice = value;
-                this.loadShopProducts();
+                // Use a small debounce for performance
+                if (this.priceTimer) clearTimeout(this.priceTimer);
+                this.priceTimer = setTimeout(() => this.loadShopProducts(), 100);
             });
         }
 
@@ -502,37 +610,27 @@ const ProductManager = {
     },
 
     initSearch() {
-        const searchInput = document.querySelector('.search-bar input');
-        const searchBtn = document.querySelector('.search-bar button');
+        const searchInput = document.getElementById('searchInput');
+        if (!searchInput) return;
 
-        if (searchInput) {
-            let debounceTimer;
-            searchInput.addEventListener('input', (e) => {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(async () => {
-                    const query = e.target.value.trim();
-                    if (query.length >= 2 && typeof API !== 'undefined') {
-                        const results = await API.searchProducts(query);
-                        const container = document.querySelector('.shelf-products, .products-grid');
-                        if (container && typeof ProductRenderer !== 'undefined') {
-                            ProductRenderer.renderProducts(results, container);
-                        }
-                    } else if (query.length === 0) {
-                        this.loadShopProducts();
-                    }
-                }, 300);
-            });
-        }
+        let debounceTimer;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(async () => {
+                const query = e.target.value.trim();
+                const container = document.querySelector('.shelf-products, .products-grid');
+                if (!container || typeof ProductRenderer === 'undefined') return;
 
-        if (searchBtn) {
-            searchBtn.addEventListener('click', () => {
-                const query = searchInput?.value.trim();
-                if (query) {
-                    // Could redirect to search results page
-                    console.log('Searching for:', query);
+                if (query.length >= 2) {
+                    ProductRenderer.showLoading(container, 3);
+                    const results = await API.searchProducts(query);
+                    ProductRenderer.renderProducts(results, container);
+                    if (window.ScrollAnimations) ScrollAnimations.observeAll();
+                } else if (query.length === 0) {
+                    this.loadShopProducts();
                 }
-            });
-        }
+            }, 300);
+        });
     }
 };
 
@@ -540,25 +638,34 @@ const ProductManager = {
 // Scroll Animations
 // ================================
 const ScrollAnimations = {
+    observer: null,
+
     init() {
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
 
-        const observer = new IntersectionObserver((entries) => {
+        this.observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
                     if (entry.target.dataset.delay) {
                         entry.target.style.transitionDelay = entry.target.dataset.delay;
                     }
+                    // Once visible, stop observing
+                    this.observer.unobserve(entry.target);
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.animate-on-scroll').forEach(el => {
-            observer.observe(el);
+        this.observeAll();
+    },
+
+    observeAll() {
+        if (!this.observer) return;
+        document.querySelectorAll('.animate-on-scroll:not(.visible)').forEach(el => {
+            this.observer.observe(el);
         });
     }
 };
@@ -749,3 +856,4 @@ window.cart = cart;
 window.wishlist = wishlist;
 window.theme = theme;
 window.ProductManager = ProductManager;
+window.ScrollAnimations = ScrollAnimations;

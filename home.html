@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="assets/css/styles.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
   <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/product-renderer.js" defer></script>
   <script src="assets/js/theme.js" defer></script>
   <script src="assets/js/navigation.js" defer></script>
   <script src="assets/js/main.js" defer></script>
@@ -106,26 +107,29 @@
     </div>
   </section>
 
-  <!-- Special Offer Banner -->
-  <section class="special-offer">
+  <!-- Special Offer Banner (Dynamic — loaded from admin) -->
+  <section class="special-offer" id="specialOfferSection" style="display: none;">
     <div class="offer-content">
-      <h2>Special Offer</h2>
-      <p>Get 20% off on selected items this week</p>
+      <h2 id="offerTitle">Special Offer</h2>
+      <p id="offerDescription">Loading...</p>
+      <div id="offerCodeWrap" style="margin-bottom: 1rem; display: none;">
+        <span style="background: rgba(255,255,255,0.2); padding: 0.4rem 1rem; border-radius: 8px; font-family: monospace; font-size: 1.1rem; letter-spacing: 2px;" id="offerCode"></span>
+      </div>
       <div class="countdown">
         <div class="countdown-item">
-          <span class="number" id="days">02</span>
+          <span class="number" id="days">00</span>
           <span class="label">Days</span>
         </div>
         <div class="countdown-item">
-          <span class="number" id="hours">14</span>
+          <span class="number" id="hours">00</span>
           <span class="label">Hours</span>
         </div>
         <div class="countdown-item">
-          <span class="number" id="minutes">38</span>
+          <span class="number" id="minutes">00</span>
           <span class="label">Minutes</span>
         </div>
         <div class="countdown-item">
-          <span class="number" id="seconds">56</span>
+          <span class="number" id="seconds">00</span>
           <span class="label">Seconds</span>
         </div>
       </div>
@@ -247,27 +251,37 @@
   </footer>
 
   <script>
-    // Countdown Timer
-    function updateCountdown() {
-      const endDate = new Date();
-      endDate.setDate(endDate.getDate() + 2);
+    // Dynamic Special Offer Countdown — powered by admin offers API
+    let countdownInterval = null;
 
-      const now = new Date();
-      const diff = endDate - now;
+    function startOfferCountdown(endDateISO) {
+      const endDate = new Date(endDateISO);
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      function tick() {
+        const now = new Date();
+        const diff = endDate - now;
 
-      document.getElementById('days').textContent = days.toString().padStart(2, '0');
-      document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-      document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-      document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        if (diff <= 0) {
+          // Offer expired — hide the section
+          document.getElementById('specialOfferSection').style.display = 'none';
+          clearInterval(countdownInterval);
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('days').textContent = days.toString().padStart(2, '0');
+        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+      }
+
+      tick();
+      countdownInterval = setInterval(tick, 1000);
     }
-
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
   </script>
 </body>
 

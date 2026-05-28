@@ -10,6 +10,21 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
+            /* Light Theme Default */
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #0ea5e9;
+            --accent: #ec4899;
+            --bg-dark: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-sidebar: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #0ea5e9 50%, #ec4899 100%);
+        }
+
+        [data-theme="dark"] {
             --primary: #8b5cf6;
             --primary-dark: #7c3aed;
             --secondary: #06b6d4;
@@ -27,6 +42,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         body {
@@ -332,9 +348,23 @@
             gap: 1.5rem;
         }
 
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .grid-col-2 {
+            grid-column: span 2;
+        }
+
         @media (max-width: 1200px) {
-            .grid-2 {
+            .grid-2, .grid-3 {
                 grid-template-columns: 1fr;
+            }
+            .grid-col-2 {
+                grid-column: span 1;
             }
         }
 
@@ -416,6 +446,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{{ url_for('main.admin_storefront') }}"
+                    class="nav-link {% if 'storefront' in request.endpoint %}active{% endif %}">
+                    <i class="fas fa-home"></i> Storefront
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ url_for('main.admin_orders') }}"
                     class="nav-link {% if 'orders' in request.endpoint %}active{% endif %}">
                     <i class="fas fa-shopping-bag"></i> Orders
@@ -447,6 +483,11 @@
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
             </li>
+            <li class="nav-item" style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+                <button onclick="toggleAdminTheme()" class="nav-link" style="width: 100%; border: none; background: none; text-align: left;">
+                    <i class="fas fa-adjust"></i> Switch Theme
+                </button>
+            </li>
         </ul>
     </aside>
 
@@ -467,6 +508,22 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Theme Management
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        }
+
+        function toggleAdminTheme() {
+            const current = localStorage.getItem('theme') || 'light';
+            const next = current === 'light' ? 'dark' : 'light';
+            applyTheme(next);
+        }
+
+        // Initialize theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(savedTheme);
+
         // Load unread message count
         fetch('/admin/api/stats')
             .then(r => r.json())

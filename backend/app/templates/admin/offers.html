@@ -2,10 +2,53 @@
 {% block content %}
 <div class="header">
     <h1>🎁 Offers Management</h1>
-    <button class="btn-primary" onclick="showOfferModal()">
-        <i class="fas fa-plus"></i> Create Offer
-    </button>
+    <div style="display: flex; gap: 0.75rem;">
+        <a href="{{ url_for('main.admin_storefront') }}" class="btn-primary" style="background: linear-gradient(135deg, #06b6d4, #22d3ee);">
+            <i class="fas fa-home"></i> Storefront
+        </a>
+        <button class="btn-primary" onclick="showOfferModal()">
+            <i class="fas fa-plus"></i> Create Offer
+        </button>
+    </div>
 </div>
+
+<style>
+    .banner-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.3rem 0.7rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .banner-badge.active {
+        background: rgba(251, 191, 36, 0.2);
+        color: #fbbf24;
+    }
+    .banner-badge.inactive {
+        background: rgba(100, 116, 139, 0.15);
+        color: var(--text-secondary);
+    }
+    .btn-banner {
+        background: rgba(251, 191, 36, 0.2);
+        color: #fbbf24;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .btn-banner:hover {
+        background: #fbbf24;
+        color: #1e1e35;
+    }
+    .btn-banner.is-banner {
+        background: #fbbf24;
+        color: #1e1e35;
+    }
+</style>
 
 <!-- Offers Table -->
 <div class="panel">
@@ -18,6 +61,7 @@
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Status</th>
+                <th>Banner</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -37,6 +81,20 @@
                     </span>
                 </td>
                 <td>
+                    {% if offer.is_homepage_banner %}
+                    <span class="banner-badge active">
+                        <i class="fas fa-home"></i> Homepage
+                    </span>
+                    {% else %}
+                    <span class="banner-badge inactive">—</span>
+                    {% endif %}
+                </td>
+                <td style="white-space: nowrap;">
+                    <button class="btn btn-sm {% if offer.is_homepage_banner %}btn-banner is-banner{% else %}btn-banner{% endif %}"
+                        onclick="toggleBanner({{ offer.id }}, {{ 'true' if offer.is_homepage_banner else 'false' }})"
+                        title="{{ 'Remove from homepage' if offer.is_homepage_banner else 'Set as homepage banner' }}">
+                        <i class="fas fa-home"></i>
+                    </button>
                     <button class="btn btn-sm btn-edit" onclick="toggleOffer({{ offer.id }})">
                         <i class="fas fa-power-off"></i>
                     </button>
@@ -65,24 +123,24 @@
             <div style="margin-bottom: 1rem;">
                 <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Title</label>
                 <input type="text" name="title" required
-                    style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: white;">
+                    style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary);">
             </div>
             <div style="margin-bottom: 1rem;">
                 <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Description</label>
                 <textarea name="description" rows="2"
-                    style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: white;"></textarea>
+                    style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary);"></textarea>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                 <div>
                     <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Discount
                         %</label>
                     <input type="number" name="discount_percent" min="1" max="100" required
-                        style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: white;">
+                        style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary);">
                 </div>
                 <div>
                     <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Code</label>
                     <input type="text" name="code"
-                        style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: white;">
+                        style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary);">
                 </div>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
@@ -90,18 +148,18 @@
                     <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Start
                         Date</label>
                     <input type="datetime-local" name="start_date" required
-                        style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: white;">
+                        style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary);">
                 </div>
                 <div>
                     <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">End Date</label>
                     <input type="datetime-local" name="end_date" required
-                        style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: white;">
+                        style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary);">
                 </div>
             </div>
             <div style="display: flex; gap: 1rem;">
                 <button type="submit" class="btn-primary" style="flex: 1;">Create Offer</button>
                 <button type="button" onclick="hideOfferModal()"
-                    style="flex: 1; padding: 0.75rem; background: transparent; border: 1px solid var(--border); border-radius: 25px; color: white; cursor: pointer;">Cancel</button>
+                    style="flex: 1; padding: 0.75rem; background: transparent; border: 1px solid var(--border); border-radius: 25px; color: var(--text-primary); cursor: pointer;">Cancel</button>
             </div>
         </form>
     </div>
@@ -145,6 +203,23 @@
             if (response.ok) window.location.reload();
         } catch (error) {
             console.error(error);
+        }
+    }
+
+    async function toggleBanner(id, isCurrentlyBanner) {
+        try {
+            let response;
+            if (isCurrentlyBanner) {
+                // Clear the banner
+                response = await fetch('/admin/api/offers/clear-homepage-banner', { method: 'POST' });
+            } else {
+                // Set this offer as the banner
+                response = await fetch(`/admin/api/offers/${id}/set-homepage-banner`, { method: 'POST' });
+            }
+            if (response.ok) window.location.reload();
+        } catch (error) {
+            console.error(error);
+            alert('Failed to update homepage banner');
         }
     }
 

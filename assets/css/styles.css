@@ -8,55 +8,51 @@
 }
 
 :root {
-    /* Intergalactic Space Theme */
+    /* Day Sky / Bright Space Theme (Light) */
+    --primary: #6366f1; /* Galactic indigo */
+    --primary-dark: #4f46e5;
+    --secondary: #0ea5e9; /* Sky blue */
+    --accent: #ec4899; /* Pink star */
+    --accent-gold: #f59e0b;
+    --background: #f8fafc; /* Ether white */
+    --bg-secondary: #f1f5f9;
+    --surface: #ffffff;
+    --text-primary: #1e293b; /* Space void black */
+    --text-secondary: #64748b;
+    --border-color: #e2e8f0;
+    --card-bg: #ffffff;
+    --nav-bg: rgba(255, 255, 255, 0.9);
+    --shadow: rgba(99, 102, 241, 0.1);
+    --glow-primary: 0 0 20px rgba(99, 102, 241, 0.2);
+    --glow-secondary: 0 0 15px rgba(14, 165, 233, 0.2);
+    --glow-accent: 0 0 15px rgba(236, 72, 153, 0.2);
+    --gradient-nebula: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 50%, #f8fafc 100%);
+    --gradient-cosmic: linear-gradient(135deg, #6366f1 0%, #0ea5e9 50%, #ec4899 100%);
+    --star-color: #6366f1;
+}
+
+/* Dark Theme - Intergalactic Space (Original) */
+[data-theme="dark"] {
     --primary: #8b5cf6;
-    /* Cosmic purple */
     --primary-dark: #7c3aed;
-    /* Deep purple */
     --secondary: #06b6d4;
-    /* Nebula cyan */
     --accent: #f472b6;
-    /* Star pink */
     --accent-gold: #fbbf24;
-    /* Stellar gold */
     --background: #0f0f1a;
-    /* Deep space */
     --bg-secondary: #161625;
-    /* Space dust */
     --surface: #1a1a2e;
-    /* Dark nebula */
     --text-primary: #f0f0ff;
-    /* Starlight white */
     --text-secondary: #a5a5c0;
-    /* Cosmic gray */
     --border-color: #2d2d4a;
-    /* Space border */
     --card-bg: #1e1e35;
-    /* Nebula card */
     --nav-bg: rgba(15, 15, 26, 0.95);
-    --shadow: rgba(139, 92, 246, 0.15);
+    --shadow: rgba(139, 92, 246, 0.2);
     --glow-primary: 0 0 20px rgba(139, 92, 246, 0.4);
     --glow-secondary: 0 0 15px rgba(6, 182, 212, 0.3);
     --glow-accent: 0 0 15px rgba(244, 114, 182, 0.3);
     --gradient-nebula: linear-gradient(135deg, #1a1a2e 0%, #2d1f4e 50%, #1a1a2e 100%);
     --gradient-cosmic: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 50%, #f472b6 100%);
-}
-
-/* Dark Theme - Even Deeper Space */
-[data-theme="dark"] {
-    --primary: #a78bfa;
-    --primary-dark: #8b5cf6;
-    --secondary: #22d3ee;
-    --accent: #f9a8d4;
-    --background: #050510;
-    --bg-secondary: #0a0a18;
-    --surface: #12122a;
-    --text-primary: #ffffff;
-    --text-secondary: #b8b8d0;
-    --border-color: #252545;
-    --card-bg: #151530;
-    --nav-bg: rgba(5, 5, 16, 0.98);
-    --shadow: rgba(167, 139, 250, 0.2);
+    --star-color: #ffffff;
 }
 
 /* Global Elements */
@@ -357,7 +353,7 @@ footer {
 .about-hero {
     height: 60vh;
     background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-        url('../images/about-hero.jpg');
+        url('../images/mainpage.webp');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -572,14 +568,14 @@ footer {
 }
 
 /* Contact Page Styles */
-.contact-hero {
+.about-hero {
     background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-        url('../images/contact-hero.jpg');
+        url('../images/mainpage.webp');
     background-size: cover;
     background-position: center;
     color: white;
     text-align: center;
-    padding: 5rem 2rem;
+    padding: 8rem 2rem;
 }
 
 .contact-hero h1 {
@@ -876,7 +872,7 @@ footer {
 /* Shelf Styles */
 .shelf {
     margin-bottom: 4rem;
-    background: white;
+    background: var(--card-bg);
     border-radius: 10px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     padding: 2rem;
@@ -1008,8 +1004,8 @@ footer {
 
 /* Categories Page Styles */
 .categories-hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-        url('../images/categories-bg.jpg');
+    background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+        url('../images/conversesole.avif');
     background-size: cover;
     background-position: center;
     color: white;
@@ -1305,8 +1301,8 @@ footer {
 }
 
 .newsletter {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-        url('../images/newsletter-bg.jpg');
+    background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+        url('../images/conversesole.avif');
     background-size: cover;
     background-position: center;
     padding: 6rem 5%;
@@ -1614,12 +1610,39 @@ footer {
 }
 
 /* Input Styles */
-input,
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 select,
 textarea {
-    background-color: var(--surface);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    background-color: var(--surface) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 8px !important;
+    font-size: 1rem !important;
+    transition: all 0.3s ease !important;
+    outline: none !important;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.25) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--text-secondary) !important;
+    opacity: 0.8 !important;
+}
+
+/* Ensure Search bar input has transparent background to look integrated */
+.search-bar input {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0.5rem 1rem !important;
+    box-shadow: none !important;
+    color: var(--text-primary) !important;
 }
 
 /* Button Styles */
@@ -3834,14 +3857,14 @@ footer {
     width: 100%;
     height: 100%;
     background-image:
-        radial-gradient(2px 2px at 20px 30px, #fff, transparent),
-        radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.8), transparent),
-        radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-        radial-gradient(2px 2px at 130px 80px, rgba(139, 92, 246, 0.6), transparent),
-        radial-gradient(1px 1px at 160px 120px, #fff, transparent),
-        radial-gradient(2px 2px at 200px 50px, rgba(6, 182, 212, 0.5), transparent),
-        radial-gradient(1px 1px at 250px 160px, #fff, transparent),
-        radial-gradient(2px 2px at 300px 100px, rgba(244, 114, 182, 0.5), transparent);
+        radial-gradient(2px 2px at 20px 30px, var(--star-color), transparent),
+        radial-gradient(2px 2px at 40px 70px, var(--star-color), transparent),
+        radial-gradient(1px 1px at 90px 40px, var(--star-color), transparent),
+        radial-gradient(2px 2px at 130px 80px, var(--primary), transparent),
+        radial-gradient(1px 1px at 160px 120px, var(--star-color), transparent),
+        radial-gradient(2px 2px at 200px 50px, var(--secondary), transparent),
+        radial-gradient(1px 1px at 250px 160px, var(--star-color), transparent),
+        radial-gradient(2px 2px at 300px 100px, var(--accent), transparent);
     background-size: 350px 350px;
     animation: twinkle 8s ease-in-out infinite;
 }
@@ -4103,21 +4126,25 @@ body {
 
 /* Cosmic Search Bar */
 .search-bar {
-    background: rgba(30, 30, 53, 0.6);
-    border: 1px solid rgba(139, 92, 246, 0.2);
+    background: var(--surface);
+    border: 1px solid var(--border-color);
     border-radius: 25px;
     overflow: hidden;
+    display: flex;
+    align-items: center;
 }
 
 .search-bar input {
-    background: transparent;
-    border: none;
-    color: var(--text-primary);
-    padding: 0.5rem 1rem;
+    background: transparent !important;
+    border: none !important;
+    color: var(--text-primary) !important;
+    padding: 0.5rem 1rem !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .search-bar input::placeholder {
-    color: var(--text-secondary);
+    color: var(--text-secondary) !important;
 }
 
 .search-bar button {

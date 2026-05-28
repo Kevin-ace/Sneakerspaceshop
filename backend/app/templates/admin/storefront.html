@@ -1,0 +1,343 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<div class="header">
+    <h1>🏠 Storefront Manager</h1>
+    <a href="/home.html" target="_blank" class="btn-primary">
+        <i class="fas fa-external-link-alt"></i> Preview Store
+    </a>
+</div>
+
+<style>
+    .product-picker-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1rem;
+    }
+    .picker-card {
+        background: var(--bg-dark);
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        padding: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    .picker-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+    .picker-card.active {
+        border-color: var(--primary);
+        background: rgba(139, 92, 246, 0.15);
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    }
+    .picker-card img {
+        width: 100%;
+        height: 100px;
+        object-fit: contain;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        background: rgba(255,255,255,0.05);
+    }
+    .picker-card .name {
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .picker-card .price {
+        font-size: 0.75rem;
+        color: var(--primary);
+        font-weight: 600;
+    }
+    .picker-card .toggle-badge {
+        display: inline-block;
+        margin-top: 0.5rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+    .toggle-badge.on {
+        background: rgba(34, 197, 94, 0.2);
+        color: #22c55e;
+    }
+    .toggle-badge.off {
+        background: rgba(100, 116, 139, 0.2);
+        color: var(--text-secondary);
+    }
+    .section-count {
+        background: var(--primary);
+        color: white;
+        padding: 0.15rem 0.6rem;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    .offer-banner-preview {
+        background: linear-gradient(135deg, rgba(139,92,246,0.2) 0%, rgba(6,182,212,0.2) 100%);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    .offer-banner-preview h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+    }
+    .offer-banner-preview .discount {
+        font-size: 2rem;
+        font-weight: 800;
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .offer-banner-preview .code {
+        background: rgba(139,92,246,0.3);
+        padding: 0.3rem 0.8rem;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-top: 0.5rem;
+    }
+    .offer-select-row {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .offer-select-row select {
+        flex: 1;
+        padding: 0.75rem;
+        background: var(--bg-dark);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+    }
+    .search-filter {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: var(--bg-dark);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    .search-filter::placeholder {
+        color: var(--text-secondary);
+    }
+</style>
+
+<!-- Trending Products -->
+<div class="panel">
+    <div class="panel-header">
+        <h3 class="panel-title">🔥 Trending Products</h3>
+        <span class="section-count" id="trendingCount">
+            {{ products | selectattr('is_trending') | list | length }}
+        </span>
+    </div>
+    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">
+        Click a product to toggle its "Trending" status. Trending products appear in the "Trending Now" section on the home page.
+    </p>
+    <input type="text" class="search-filter" placeholder="🔍 Search products..." oninput="filterProducts('trending', this.value)">
+    <div class="product-picker-grid" id="trendingGrid">
+        {% for product in products %}
+        <div class="picker-card {% if product.is_trending %}active{% endif %}"
+             data-id="{{ product.id }}"
+             data-name="{{ product.name | lower }}"
+             data-section="trending"
+             onclick="toggleTrending({{ product.id }}, this)">
+            <img src="{{ product.display_image_url }}" alt="{{ product.name }}" onerror="this.src='/assets/images/hero-sneaker.png'">
+            <div class="name" title="{{ product.name }}">{{ product.name }}</div>
+            <div class="price">Ksh {{ "{:,.0f}".format(product.price) }}</div>
+            <span class="toggle-badge {% if product.is_trending %}on{% else %}off{% endif %}">
+                {{ '✓ Trending' if product.is_trending else 'Not Trending' }}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- New Arrivals -->
+<div class="panel">
+    <div class="panel-header">
+        <h3 class="panel-title">✨ New Arrivals</h3>
+        <span class="section-count" id="arrivalsCount">
+            {{ products | selectattr('is_new_arrival') | list | length }}
+        </span>
+    </div>
+    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">
+        Click a product to toggle its "New Arrival" status. New Arrivals appear in the dedicated section on the home page.
+    </p>
+    <input type="text" class="search-filter" placeholder="🔍 Search products..." oninput="filterProducts('arrivals', this.value)">
+    <div class="product-picker-grid" id="arrivalsGrid">
+        {% for product in products %}
+        <div class="picker-card {% if product.is_new_arrival %}active{% endif %}"
+             data-id="{{ product.id }}"
+             data-name="{{ product.name | lower }}"
+             data-section="arrivals"
+             onclick="toggleNewArrival({{ product.id }}, this)">
+            <img src="{{ product.display_image_url }}" alt="{{ product.name }}" onerror="this.src='/assets/images/hero-sneaker.png'">
+            <div class="name" title="{{ product.name }}">{{ product.name }}</div>
+            <div class="price">Ksh {{ "{:,.0f}".format(product.price) }}</div>
+            <span class="toggle-badge {% if product.is_new_arrival %}on{% else %}off{% endif %}">
+                {{ '✓ New Arrival' if product.is_new_arrival else 'Not Listed' }}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Homepage Special Offer -->
+<div class="panel">
+    <div class="panel-header">
+        <h3 class="panel-title">🎁 Homepage Special Offer Banner</h3>
+    </div>
+    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">
+        Select an active offer to display as the homepage banner with a live countdown timer.
+        The offer must be active and within its date range to appear on the storefront.
+    </p>
+
+    <!-- Current Banner Preview -->
+    <div id="bannerPreview">
+        {% set banner_offer = active_offers | selectattr('is_homepage_banner') | first %}
+        {% if banner_offer is defined and banner_offer %}
+        <div class="offer-banner-preview">
+            <h3>{{ banner_offer.title }}</h3>
+            <div class="discount">{{ banner_offer.discount_percent }}% OFF</div>
+            {% if banner_offer.description %}
+            <p style="color: var(--text-secondary); margin: 0.5rem 0;">{{ banner_offer.description }}</p>
+            {% endif %}
+            {% if banner_offer.code %}
+            <div class="code">{{ banner_offer.code }}</div>
+            {% endif %}
+            <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 0.75rem;">
+                Ends: {{ banner_offer.end_date.strftime('%b %d, %Y at %I:%M %p') }}
+            </p>
+        </div>
+        {% else %}
+        <div class="offer-banner-preview" style="opacity: 0.5;">
+            <p style="color: var(--text-secondary);">No homepage banner set. The Special Offer section will be hidden on the home page.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Offer Selector -->
+    <div class="offer-select-row">
+        <select id="offerSelect">
+            <option value="">— Select an offer to display —</option>
+            {% for offer in active_offers %}
+            <option value="{{ offer.id }}" {% if offer.is_homepage_banner %}selected{% endif %}>
+                {{ offer.title }} ({{ offer.discount_percent }}% off) — ends {{ offer.end_date.strftime('%b %d') }}
+            </option>
+            {% endfor %}
+        </select>
+        <button class="btn-primary btn-sm" onclick="setHomepageBanner()">
+            <i class="fas fa-check"></i> Set Banner
+        </button>
+        <button class="btn-sm btn-delete" onclick="clearHomepageBanner()" style="padding: 0.6rem 1rem; border-radius: 25px; cursor: pointer;">
+            <i class="fas fa-times"></i> Clear
+        </button>
+    </div>
+
+    {% if not active_offers %}
+    <p style="color: var(--text-secondary); text-align: center; padding: 1rem; margin-top: 1rem;">
+        No active offers available. <a href="{{ url_for('main.admin_offers') }}" style="color: var(--primary);">Create one first</a>.
+    </p>
+    {% endif %}
+</div>
+
+<script>
+    // ============ Trending Toggle ============
+    async function toggleTrending(productId, card) {
+        try {
+            const res = await fetch(`/admin/api/products/${productId}/toggle-trending`, { method: 'POST' });
+            if (!res.ok) throw new Error('Failed');
+            const product = await res.json();
+
+            card.classList.toggle('active', product.is_trending);
+            const badge = card.querySelector('.toggle-badge');
+            badge.className = `toggle-badge ${product.is_trending ? 'on' : 'off'}`;
+            badge.textContent = product.is_trending ? '✓ Trending' : 'Not Trending';
+
+            updateCount('trending');
+        } catch (e) {
+            console.error(e);
+            alert('Failed to toggle trending status');
+        }
+    }
+
+    // ============ New Arrival Toggle ============
+    async function toggleNewArrival(productId, card) {
+        try {
+            const res = await fetch(`/admin/api/products/${productId}/toggle-new-arrival`, { method: 'POST' });
+            if (!res.ok) throw new Error('Failed');
+            const product = await res.json();
+
+            card.classList.toggle('active', product.is_new_arrival);
+            const badge = card.querySelector('.toggle-badge');
+            badge.className = `toggle-badge ${product.is_new_arrival ? 'on' : 'off'}`;
+            badge.textContent = product.is_new_arrival ? '✓ New Arrival' : 'Not Listed';
+
+            updateCount('arrivals');
+        } catch (e) {
+            console.error(e);
+            alert('Failed to toggle new arrival status');
+        }
+    }
+
+    // ============ Homepage Banner ============
+    async function setHomepageBanner() {
+        const select = document.getElementById('offerSelect');
+        const offerId = select.value;
+        if (!offerId) {
+            alert('Please select an offer first.');
+            return;
+        }
+        try {
+            const res = await fetch(`/admin/api/offers/${offerId}/set-homepage-banner`, { method: 'POST' });
+            if (!res.ok) throw new Error('Failed');
+            window.location.reload();
+        } catch (e) {
+            console.error(e);
+            alert('Failed to set homepage banner');
+        }
+    }
+
+    async function clearHomepageBanner() {
+        if (!confirm('Remove the homepage banner? The Special Offer section will be hidden on the home page.')) return;
+        try {
+            const res = await fetch('/admin/api/offers/clear-homepage-banner', { method: 'POST' });
+            if (!res.ok) throw new Error('Failed');
+            window.location.reload();
+        } catch (e) {
+            console.error(e);
+            alert('Failed to clear homepage banner');
+        }
+    }
+
+    // ============ Helpers ============
+    function updateCount(section) {
+        const gridId = section === 'trending' ? 'trendingGrid' : 'arrivalsGrid';
+        const countId = section === 'trending' ? 'trendingCount' : 'arrivalsCount';
+        const count = document.querySelectorAll(`#${gridId} .picker-card.active`).length;
+        document.getElementById(countId).textContent = count;
+    }
+
+    function filterProducts(section, query) {
+        const gridId = section === 'trending' ? 'trendingGrid' : 'arrivalsGrid';
+        const cards = document.querySelectorAll(`#${gridId} .picker-card`);
+        const q = query.toLowerCase();
+        cards.forEach(card => {
+            const name = card.dataset.name || '';
+            card.style.display = name.includes(q) ? '' : 'none';
+        });
+    }
+</script>
+{% endblock %}

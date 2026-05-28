@@ -1,16 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to SneakerSpace | Premium Sneaker Store</title>
+  <title>SneakerSpace | Premium Authentic Sneakers Kenya</title>
+  <meta name="description" content="Nairobi's premier destination for authentic sneakers. Exclusive drops from Nike, Jordan, Adidas, and more with nationwide delivery.">
+  <link rel="canonical" href="https://sneakerspace.co.ke/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sneakerspace.co.ke/">
+  <meta property="og:title" content="SneakerSpace | Premium Authentic Sneakers Kenya">
+  <meta property="og:description" content="Exclusive drops from Nike, Jordan, Adidas, and more. Authentic quality, nationwide delivery.">
+  <meta property="og:image" content="https://sneakerspace.co.ke/assets/images/mainpage.webp">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://sneakerspace.co.ke/">
+  <meta property="twitter:title" content="SneakerSpace | Premium Authentic Sneakers Kenya">
+  <meta property="twitter:description" content="Exclusive drops from Nike, Jordan, Adidas, and more. Authentic quality, nationwide delivery.">
+  <meta property="twitter:image" content="https://sneakerspace.co.ke/assets/images/mainpage.webp">
   <link rel="stylesheet" href="assets/css/styles.css" />
   <link rel="stylesheet" href="assets/css/landing.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
   <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/product-renderer.js" defer></script>
   <script src="assets/js/theme.js" defer></script>
   <script src="assets/js/navigation.js" defer></script>
+  <script src="assets/js/sneaker3d.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </head>
 
@@ -41,12 +59,11 @@
       </p>
       <div class="cta-buttons">
         <a href="home.html" class="primary-btn">Enter Store</a>
-        <a href="#collection" class="secondary-btn">View Collection</a>
       </div>
     </div>
     <div class="hero-visual">
-      <div class="rotating-sneaker">
-        <img src="assets/images/hero-sneaker.png" alt="Featured Sneaker" width="500" height="500" />
+      <div class="rotating-sneaker" style="width: 100%; max-width: 500px; height: 500px; display: flex; align-items: center; justify-content: center; position: relative;">
+        <canvas id="sneaker3dCanvas" style="width: 100%; height: 100%; filter: drop-shadow(0 0 20px rgba(139,92,246,0.3));"></canvas>
       </div>
       <div class="floating-elements">
         <span class="element">Premium Quality</span>
@@ -83,26 +100,7 @@
     </div>
   </section>
 
-  <section id="collection" class="collection-preview">
-    <h2>Collections</h2>
-    <div class="collection-grid">
-      <div class="collection-card">
-        <img src="assets/images/running-category.jpg" alt="Running Collection" width="400" height="300" />
-        <div class="overlay">
-          <h3>Running</h3>
-          <a href="home.html" class="explore-btn">Explore</a>
-        </div>
-      </div>
-      <div class="collection-card">
-        <img src="assets/images/VansSk8-Hi.jpg" alt="Casual Collection" width="400" height="500" />
-        <div class="overlay">
-          <h3>Casual</h3>
-          <a href="home.html" class="explore-btn">Explore</a>
-        </div>
-      </div>
-      <!-- Add more collection cards -->
-    </div>
-  </section>
+
 
   <section class="benefits-section">
     <div class="benefits-container">

@@ -9,11 +9,13 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_wtf.csrf import CSRFProtect
 import os
 
 db = SQLAlchemy()
 migrate = Migrate()
 bcrypt = Bcrypt()
+csrf = CSRFProtect()
 login_manager = LoginManager()
 login_manager.login_view = 'main.customer_login'
 login_manager.login_message_category = 'info'
@@ -38,6 +40,7 @@ def create_app(config_class=Config):
     bcrypt.init_app(app)
     login_manager.init_app(app)
     limiter.init_app(app)
+    csrf.init_app(app)
 
     # Ensure upload directories exist
     upload_folder = app.config.get('UPLOAD_FOLDER', os.path.join(backend_dir, 'uploads', 'products'))

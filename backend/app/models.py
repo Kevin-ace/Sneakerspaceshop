@@ -84,6 +84,8 @@ class Product(db.Model):
     image_filename = db.Column(db.String(255), nullable=True, default='')
     stock = db.Column(db.Integer, default=10)
     is_featured = db.Column(db.Boolean, default=False)
+    is_trending = db.Column(db.Boolean, default=False)
+    is_new_arrival = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     @property
@@ -109,6 +111,8 @@ class Product(db.Model):
             'image_url': self.display_image_url,
             'stock': self.stock,
             'is_featured': self.is_featured,
+            'is_trending': self.is_trending,
+            'is_new_arrival': self.is_new_arrival,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
 
@@ -224,6 +228,7 @@ class Offer(db.Model):
     start_date = db.Column(db.DateTime, nullable=False)
     end_date = db.Column(db.DateTime, nullable=False)
     is_active = db.Column(db.Boolean, default=True)
+    is_homepage_banner = db.Column(db.Boolean, default=False)
     usage_count = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
@@ -237,6 +242,7 @@ class Offer(db.Model):
             'start_date': self.start_date.isoformat() if self.start_date else None,
             'end_date': self.end_date.isoformat() if self.end_date else None,
             'is_active': self.is_active,
+            'is_homepage_banner': self.is_homepage_banner,
             'usage_count': self.usage_count,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
