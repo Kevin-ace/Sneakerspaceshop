@@ -64,9 +64,21 @@
         </div>
     </div>
     <script>
+        const baseUrl = (window.API && API.BASE_URL) || '';
+
         async function loadAccount(){
+            if (window.API && API.isStaticHost && API.isStaticHost()) {
+                const storedUser = localStorage.getItem('demo_user');
+                const c = storedUser ? JSON.parse(storedUser) : { name: 'Space Explorer', email: 'explorer@spacesneakers.com' };
+                document.getElementById('profileCard').style.display='flex';
+                document.getElementById('profileAvatar').textContent=(c.name && c.name[0] ? c.name[0] : 'S').toUpperCase();
+                document.getElementById('profileName').textContent=c.name || 'Space Explorer';
+                document.getElementById('profileEmail').textContent=c.email || 'explorer@spacesneakers.com';
+                loadOrders();
+                return;
+            }
             try{
-                const r=await fetch('/api/auth/status');
+                const r=await fetch(`${baseUrl}/api/auth/status`);
                 let d=null;
                 if(r.ok){ try{ d=await r.json(); }catch(e){} }
                 if(!d || !d.logged_in){window.location.href='account-login.html';return}
@@ -80,29 +92,60 @@
         }
         async function loadOrders(){
             const container=document.getElementById('ordersContainer');
+            if (window.API && API.isStaticHost && API.isStaticHost()) {
+                const demoOrders = [
+                    {
+                        id: 1001,
+                        created_at: new Date().toISOString(),
+                        total: 250000,
+                        status: 'delivered',
+                        status_step: 4,
+                        items: [{ product_name: "Nike Air Mag 'Back to the Future'", quantity: 1, price: 250000 }]
+                    },
+                    {
+                        id: 1002,
+                        created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
+                        total: 18500,
+                        status: 'shipped',
+                        status_step: 3,
+                        items: [{ product_name: "Air Jordan 8 Retro", quantity: 1, price: 18500 }]
+                    }
+                ];
+                renderOrdersList(demoOrders);
+                return;
+            }
             try{
-                const r=await fetch('/api/account/orders');
+                const r=await fetch(`${baseUrl}/api/account/orders`);
                 let orders=null;
                 if(r.ok){ try{ orders=await r.json(); }catch(e){} }
                 if(!Array.isArray(orders)) orders = [];
-                if(!orders.length){container.innerHTML='<div class="empty-state"><i class="fas fa-box-open"></i><h3>No orders yet</h3><p>Start shopping to see your orders here!</p><a href="shop.html" class="shop-btn">Browse Shop</a></div>';return}
-                container.innerHTML=orders.map(o=>`
-                    <a href="order-detail.html?id=${o.id}" class="order-card">
-                        <div class="order-top">
-                            <span class="order-id">Order #${o.id}</span>
-                            <span class="order-date">${new Date(o.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</span>
-                        </div>
-                        <div class="order-bottom">
-                            <span class="order-total">Ksh ${o.total.toLocaleString()}</span>
-                            <span class="status-badge status-${o.status}">${o.status.charAt(0).toUpperCase()+o.status.slice(1)}</span>
-                        </div>
-                        <div class="order-items-preview">${o.items.map(i=>i.product_name).join(', ')}</div>
-                    </a>
-                `).join('');
+                renderOrdersList(orders);
             }catch(e){container.innerHTML='<p style="color:#ef4444">Failed to load orders</p>'}
         }
+        function renderOrdersList(orders){
+            const container=document.getElementById('ordersContainer');
+            if(!orders.length){container.innerHTML='<div class="empty-state"><i class="fas fa-box-open"></i><h3>No orders yet</h3><p>Start shopping to see your orders here!</p><a href="shop.html" class="shop-btn">Browse Shop</a></div>';return}
+            container.innerHTML=orders.map(o=>`
+                <a href="order-detail.html?id=${o.id}" class="order-card">
+                    <div class="order-top">
+                        <span class="order-id">Order #${o.id}</span>
+                        <span class="order-date">${new Date(o.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</span>
+                    </div>
+                    <div class="order-bottom">
+                        <span class="order-total">Ksh ${o.total.toLocaleString()}</span>
+                        <span class="status-badge status-${o.status}">${o.status.charAt(0).toUpperCase()+o.status.slice(1)}</span>
+                    </div>
+                    <div class="order-items-preview">${o.items.map(i=>i.product_name).join(', ')}</div>
+                </a>
+            `).join('');
+        }
         async function logout(){
-            try { await fetch('/api/auth/logout',{method:'POST'}); } catch(e){}
+            if (window.API && API.isStaticHost && API.isStaticHost()) {
+                localStorage.removeItem('demo_user');
+                window.location.href='home.html';
+                return;
+            }
+            try { await fetch(`${baseUrl}/api/auth/logout`,{method:'POST'}); } catch(e){}
             window.location.href='home.html';
         }
         loadAccount();

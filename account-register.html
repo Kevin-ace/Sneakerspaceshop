@@ -75,7 +75,13 @@
             if(data.password!==data.confirm){err.textContent='Passwords do not match';err.style.display='block';return}
             btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Creating account...';btn.disabled=true;err.style.display='none';
             try{
-                const r=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+                if (window.API && API.isStaticHost && API.isStaticHost()) {
+                    localStorage.setItem('demo_user', JSON.stringify({ name: data.name || 'Space Explorer', email: data.email || 'explorer@spacesneakers.com' }));
+                    window.location.href='account.html';
+                    return;
+                }
+                const baseUrl = (window.API && API.BASE_URL) || '';
+                const r=await fetch(`${baseUrl}/api/auth/register`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
                 let d=null;
                 try{ d=await r.json(); }catch(jsonErr){}
                 if(!r.ok) throw new Error((d && d.error) ? d.error : 'Registration failed');

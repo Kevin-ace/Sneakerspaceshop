@@ -62,7 +62,16 @@
             btn.disabled=true;
             err.style.display='none';
             try{
-                const r=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(fd))});
+                if (window.API && API.isStaticHost && API.isStaticHost()) {
+                    const email = fd.get('email') || 'explorer@spacesneakers.com';
+                    const rawName = email.split('@')[0].replace(/[._]/g, ' ') || 'Space Explorer';
+                    const formattedName = rawName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                    localStorage.setItem('demo_user', JSON.stringify({ name: formattedName, email }));
+                    window.location.href = 'account.html';
+                    return;
+                }
+                const baseUrl = (window.API && API.BASE_URL) || '';
+                const r=await fetch(`${baseUrl}/api/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(fd))});
                 let d=null;
                 try{ d=await r.json(); }catch(jsonErr){}
                 if(!r.ok) throw new Error((d && d.error) ? d.error : 'Invalid email or password');

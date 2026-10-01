@@ -78,18 +78,32 @@
     </div>
     <input type="file" id="chatFileInput" accept="image/*" style="display:none">
     <script>
-        const orderId=new URLSearchParams(window.location.search).get('id');
-        if(!orderId)window.location.href='account.html';
+        const baseUrl = (window.API && API.BASE_URL) || '';
+        const orderId=new URLSearchParams(window.location.search).get('id') || '1001';
         let chatPollTimer=null;
         let lastMsgCount=0;
 
         async function loadOrder(){
+            if (window.API && API.isStaticHost && API.isStaticHost()) {
+                const mockOrder = {
+                    id: orderId,
+                    created_at: new Date().toISOString(),
+                    total: 250000,
+                    status: 'delivered',
+                    status_step: 4,
+                    items: [{ product_name: "Nike Air Mag 'Back to the Future'", quantity: 1, price: 250000 }]
+                };
+                document.getElementById('pageTitle').textContent=`Order #${mockOrder.id}`;
+                renderOrder(mockOrder);
+                startChatPolling();
+                return;
+            }
             try{
-                const ar=await fetch('/api/auth/status');
+                const ar=await fetch(`${baseUrl}/api/auth/status`);
                 let ad=null;
                 if(ar.ok){ try{ ad=await ar.json(); }catch(e){} }
                 if(!ad || !ad.logged_in){window.location.href='account-login.html';return}
-                const r=await fetch(`/api/account/orders/${orderId}`);
+                const r=await fetch(`${baseUrl}/api/account/orders/${orderId}`);
                 if(!r.ok)throw new Error();
                 let o=null;
                 try{ o=await r.json(); }catch(e){}
@@ -142,28 +156,37 @@
         }
 
         async function loadMessages(){
+            if (window.API && API.isStaticHost && API.isStaticHost()) {
+                const stored = sessionStorage.getItem('demo_chat_' + orderId);
+                const msgs = stored ? JSON.parse(stored) : [
+                    { sender_type: 'admin', message: 'Hello! Thank you for your order with SpaceSneakers. How can we assist you today?', created_at: new Date().toISOString() }
+                ];
+                renderChatMessages(msgs);
+                return;
+            }
             try{
-                const r=await fetch(`/api/chat/${orderId}/messages`);
+                const r=await fetch(`${baseUrl}/api/chat/${orderId}/messages`);
                 if(!r.ok)return;
                 let msgs=null;
                 try{ msgs=await r.json(); }catch(e){ return; }
                 if(!Array.isArray(msgs)) return;
-                if(msgs.length===lastMsgCount)return;
-                lastMsgCount=msgs.length;
-                const box=document.getElementById('chatBox');
-                if(!msgs.length){box.innerHTML='<div class="chat-empty"><i class="fas fa-comments"></i><p>Start a conversation about this order</p></div>';return}
-                lastMsgCount=msgs.length;
-                const box=document.getElementById('chatBox');
-                if(!msgs.length){box.innerHTML='<div class="chat-empty"><i class="fas fa-comments"></i><p>Start a conversation about this order</p></div>';return}
-                box.innerHTML=msgs.map(m=>`
-                    <div class="chat-msg ${m.sender_type}">
-                        <div class="sender">${m.sender_type==='admin'?'🛡️ Support':'You'}</div>
-                        ${m.message?`<div>${m.message}</div>`:''}
-                        ${m.image_url?`<img src="${m.image_url}" onclick="window.open(this.src,'_blank')">`:''}
-                        <div class="time">${new Date(m.created_at).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}</div>
-                    </div>`).join('');
-                box.scrollTop=box.scrollHeight;
+                renderChatMessages(msgs);
             }catch(e){}
+        }
+
+        function renderChatMessages(msgs) {
+            if(msgs.length===lastMsgCount)return;
+            lastMsgCount=msgs.length;
+            const box=document.getElementById('chatBox');
+            if(!msgs.length){box.innerHTML='<div class="chat-empty"><i class="fas fa-comments"></i><p>Start a conversation about this order</p></div>';return}
+            box.innerHTML=msgs.map(m=>`
+                <div class="chat-msg ${m.sender_type}">
+                    <div class="sender">${m.sender_type==='admin'?'🛡️ Support':'You'}</div>
+                    ${m.message?`<div>${m.message}</div>`:''}
+                    ${m.image_url?`<img src="${m.image_url}" onclick="window.open(this.src,'_blank')">`:''}
+                    <div class="time">${new Date(m.created_at).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}</div>
+                </div>`).join('');
+            box.scrollTop=box.scrollHeight;
         }
 
         async function sendMessage(){
@@ -172,19 +195,40 @@
             const text=input.value.trim();
             if(fileInput.files.length){await uploadImage(text);input.value='';clearImage();return}
             if(!text)return;
+            if (window.API && API.isStaticHost && API.isStaticHost()) {
+                const stored = sessionStorage.getItem('demo_chat_' + orderId);
+                const msgs = stored ? JSON.parse(stored) : [
+                    { sender_type: 'admin', message: 'Hello! Thank you for your order with SpaceSneakers. How can we assist you today?', created_at: new Date().toISOString() }
+                ];
+                msgs.push({ sender_type: 'customer', message: text, created_at: new Date().toISOString() });
+                sessionStorage.setItem('demo_chat_' + orderId, JSON.stringify(msgs));
+                input.value='';
+                loadMessages();
+                return;
+            }
             try{
-                await fetch(`/api/chat/${orderId}/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})});
+                await fetch(`${baseUrl}/api/chat/${orderId}/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})});
                 input.value='';lastMsgCount=0;loadMessages();
             }catch(e){}
         }
 
         async function uploadImage(caption){
             const fileInput=document.getElementById('chatFileInput');
+            if (window.API && API.isStaticHost && API.isStaticHost()) {
+                const stored = sessionStorage.getItem('demo_chat_' + orderId);
+                const msgs = stored ? JSON.parse(stored) : [];
+                const imgUrl = fileInput.files[0] ? URL.createObjectURL(fileInput.files[0]) : '';
+                msgs.push({ sender_type: 'customer', message: caption || '', image_url: imgUrl, created_at: new Date().toISOString() });
+                sessionStorage.setItem('demo_chat_' + orderId, JSON.stringify(msgs));
+                lastMsgCount=0;
+                loadMessages();
+                return;
+            }
             const fd=new FormData();
             fd.append('image',fileInput.files[0]);
             if(caption)fd.append('message',caption);
             try{
-                await fetch(`/api/chat/${orderId}/upload`,{method:'POST',body:fd});
+                await fetch(`${baseUrl}/api/chat/${orderId}/upload`,{method:'POST',body:fd});
                 lastMsgCount=0;loadMessages();
             }catch(e){}
         }

@@ -249,20 +249,22 @@ const cart = {
     },
 
     async showCheckoutModal() {
-        // Check if customer is logged in
-        try {
-            const authRes = await fetch('/api/auth/status');
-            let authData = null;
-            if (authRes.ok) { try { authData = await authRes.json(); } catch (e) {} }
-            if (!authData || !authData.logged_in) {
+        // Check if customer is logged in (unless running in static demo mode)
+        if (typeof API === 'undefined' || !API.isStaticHost()) {
+            try {
+                const authRes = await fetch(`${(API && API.BASE_URL) || ''}/api/auth/status`);
+                let authData = null;
+                if (authRes.ok) { try { authData = await authRes.json(); } catch (e) {} }
+                if (!authData || !authData.logged_in) {
+                    this.showNotification('Please login to place an order', 'info');
+                    setTimeout(() => { window.location.href = 'account-login.html'; }, 1000);
+                    return;
+                }
+            } catch (e) {
                 this.showNotification('Please login to place an order', 'info');
                 setTimeout(() => { window.location.href = 'account-login.html'; }, 1000);
                 return;
             }
-        } catch (e) {
-            this.showNotification('Please login to place an order', 'info');
-            setTimeout(() => { window.location.href = 'account-login.html'; }, 1000);
-            return;
         }
 
         document.querySelectorAll('.checkout-modal').forEach(m => m.remove());
@@ -826,23 +828,29 @@ const AccountUI = {
         accountBtn.setAttribute('aria-label', 'Account');
         accountBtn.style.cssText = 'color:var(--text-secondary);font-size:1.2rem;cursor:pointer;transition:color 0.3s;text-decoration:none;display:flex;align-items:center;gap:0.3rem';
 
-        try {
-            const r = await fetch('/api/auth/status');
-            let d = null;
-            if (r.ok) { try { d = await r.json(); } catch (e) {} }
-            if (d && d.logged_in) {
-                accountBtn.href = 'account.html';
-                accountBtn.innerHTML = `<i class="fas fa-user-circle" style="color:var(--primary)"></i>`;
-                accountBtn.title = d.customer.name;
-            } else {
+        if (typeof API !== 'undefined' && typeof API.isStaticHost === 'function' && API.isStaticHost()) {
+            accountBtn.href = 'account-login.html';
+            accountBtn.innerHTML = `<i class="fas fa-user"></i>`;
+            accountBtn.title = 'Sign In';
+        } else {
+            try {
+                const r = await fetch(`${(API && API.BASE_URL) || ''}/api/auth/status`);
+                let d = null;
+                if (r.ok) { try { d = await r.json(); } catch (e) {} }
+                if (d && d.logged_in) {
+                    accountBtn.href = 'account.html';
+                    accountBtn.innerHTML = `<i class="fas fa-user-circle" style="color:var(--primary)"></i>`;
+                    accountBtn.title = d.customer.name;
+                } else {
+                    accountBtn.href = 'account-login.html';
+                    accountBtn.innerHTML = `<i class="fas fa-user"></i>`;
+                    accountBtn.title = 'Sign In';
+                }
+            } catch (e) {
                 accountBtn.href = 'account-login.html';
                 accountBtn.innerHTML = `<i class="fas fa-user"></i>`;
                 accountBtn.title = 'Sign In';
             }
-        } catch (e) {
-            accountBtn.href = 'account-login.html';
-            accountBtn.innerHTML = `<i class="fas fa-user"></i>`;
-            accountBtn.title = 'Sign In';
         }
 
         if (themeToggle) {

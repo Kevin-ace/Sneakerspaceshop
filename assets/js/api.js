@@ -11,6 +11,15 @@ const API = {
         return (typeof window !== 'undefined' && window.API_BASE_URL) ? window.API_BASE_URL.replace(/\/$/, '') : '';
     },
 
+    /**
+     * Check if running in a static hosting environment (like GitHub Pages) without an external API backend
+     */
+    isStaticHost() {
+        if (typeof window === 'undefined') return false;
+        if (window.API_BASE_URL) return false;
+        return window.location.hostname.endsWith('github.io') || window.location.protocol === 'file:' || window.STATIC_MODE === true;
+    },
+
     // Rich static catalog for GitHub Pages / static deployment
     FALLBACK_PRODUCTS: [
         {
@@ -140,6 +149,9 @@ const API = {
      * @returns {Promise<Array>} Array of product objects
      */
     async getProducts() {
+        if (this.isStaticHost()) {
+            return this.FALLBACK_PRODUCTS;
+        }
         try {
             const response = await fetch(`${this.BASE_URL}/api/products`);
             if (response.ok) {
@@ -180,6 +192,10 @@ const API = {
      */
     async getProductById(id) {
         const numId = parseInt(id, 10);
+        if (this.isStaticHost()) {
+            const products = this.FALLBACK_PRODUCTS;
+            return products.find(p => p.id === numId) || products[0] || null;
+        }
         try {
             const response = await fetch(`${this.BASE_URL}/api/products/${numId}`);
             if (response.ok) {
@@ -199,6 +215,10 @@ const API = {
      * @returns {Promise<Array>} Trending products
      */
     async getTrendingProducts() {
+        if (this.isStaticHost()) {
+            const trending = this.FALLBACK_PRODUCTS.filter(p => p.is_trending);
+            return trending.length > 0 ? trending : this.FALLBACK_PRODUCTS.slice(0, 4);
+        }
         try {
             const response = await fetch(`${this.BASE_URL}/api/products/trending`);
             if (response.ok) {
@@ -235,6 +255,10 @@ const API = {
      * @returns {Promise<Array>} New arrival products
      */
     async getNewArrivals() {
+        if (this.isStaticHost()) {
+            const arrivals = this.FALLBACK_PRODUCTS.filter(p => p.is_new_arrival);
+            return arrivals.length > 0 ? arrivals : this.FALLBACK_PRODUCTS.slice(0, 4);
+        }
         try {
             const response = await fetch(`${this.BASE_URL}/api/products/new-arrivals`);
             if (response.ok) {
@@ -255,6 +279,17 @@ const API = {
      * @returns {Promise<Object|null>} Active homepage offer or null
      */
     async getHomepageOffer() {
+        if (this.isStaticHost()) {
+            const futureDate = new Date();
+            futureDate.setDate(futureDate.getDate() + 7);
+            return {
+                title: "Exclusive Launch Offer",
+                description: "Get 20% off on your first sneaker order! Use promo code SPACE20 at checkout.",
+                discount_percent: 20,
+                code: "SPACE20",
+                end_date: futureDate.toISOString()
+            };
+        }
         try {
             const response = await fetch(`${this.BASE_URL}/api/offers/homepage`);
             if (response.ok) {
@@ -318,6 +353,13 @@ const API = {
      * Submit a checkout order
      */
     async checkout(orderData) {
+        if (this.isStaticHost()) {
+            return {
+                message: 'Order received! (Demo mode)',
+                order_id: Math.floor(1000 + Math.random() * 9000),
+                total: orderData.total || 0
+            };
+        }
         try {
             const response = await fetch(`${this.BASE_URL}/api/checkout`, {
                 method: 'POST',
@@ -345,6 +387,9 @@ const API = {
      * Submit a contact form message
      */
     async sendContactMessage(contactData) {
+        if (this.isStaticHost()) {
+            return { message: 'Message sent successfully! (Demo mode)' };
+        }
         try {
             const response = await fetch(`${this.BASE_URL}/api/contact`, {
                 method: 'POST',
