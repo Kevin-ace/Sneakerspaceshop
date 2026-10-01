@@ -66,8 +66,10 @@
     <script>
         async function loadAccount(){
             try{
-                const r=await fetch('/api/auth/status');const d=await r.json();
-                if(!d.logged_in){window.location.href='account-login.html';return}
+                const r=await fetch('/api/auth/status');
+                let d=null;
+                if(r.ok){ try{ d=await r.json(); }catch(e){} }
+                if(!d || !d.logged_in){window.location.href='account-login.html';return}
                 const c=d.customer;
                 document.getElementById('profileCard').style.display='flex';
                 document.getElementById('profileAvatar').textContent=c.name[0].toUpperCase();
@@ -79,7 +81,10 @@
         async function loadOrders(){
             const container=document.getElementById('ordersContainer');
             try{
-                const r=await fetch('/api/account/orders');const orders=await r.json();
+                const r=await fetch('/api/account/orders');
+                let orders=null;
+                if(r.ok){ try{ orders=await r.json(); }catch(e){} }
+                if(!Array.isArray(orders)) orders = [];
                 if(!orders.length){container.innerHTML='<div class="empty-state"><i class="fas fa-box-open"></i><h3>No orders yet</h3><p>Start shopping to see your orders here!</p><a href="shop.html" class="shop-btn">Browse Shop</a></div>';return}
                 container.innerHTML=orders.map(o=>`
                     <a href="order-detail.html?id=${o.id}" class="order-card">
@@ -97,7 +102,7 @@
             }catch(e){container.innerHTML='<p style="color:#ef4444">Failed to load orders</p>'}
         }
         async function logout(){
-            await fetch('/api/auth/logout',{method:'POST'});
+            try { await fetch('/api/auth/logout',{method:'POST'}); } catch(e){}
             window.location.href='home.html';
         }
         loadAccount();

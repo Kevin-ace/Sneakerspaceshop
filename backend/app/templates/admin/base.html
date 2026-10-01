@@ -526,10 +526,10 @@
 
         // Load unread message count
         fetch('/admin/api/stats')
-            .then(r => r.json())
+            .then(r => r.ok ? r.json() : null)
             .then(data => {
                 const badge = document.getElementById('msgBadge');
-                if (badge && data.unread_messages > 0) {
+                if (badge && data && data.unread_messages > 0) {
                     badge.textContent = data.unread_messages;
                 }
             })

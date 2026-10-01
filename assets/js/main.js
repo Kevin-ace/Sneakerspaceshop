@@ -252,8 +252,9 @@ const cart = {
         // Check if customer is logged in
         try {
             const authRes = await fetch('/api/auth/status');
-            const authData = await authRes.json();
-            if (!authData.logged_in) {
+            let authData = null;
+            if (authRes.ok) { try { authData = await authRes.json(); } catch (e) {} }
+            if (!authData || !authData.logged_in) {
                 this.showNotification('Please login to place an order', 'info');
                 setTimeout(() => { window.location.href = 'account-login.html'; }, 1000);
                 return;
@@ -827,8 +828,9 @@ const AccountUI = {
 
         try {
             const r = await fetch('/api/auth/status');
-            const d = await r.json();
-            if (d.logged_in) {
+            let d = null;
+            if (r.ok) { try { d = await r.json(); } catch (e) {} }
+            if (d && d.logged_in) {
                 accountBtn.href = 'account.html';
                 accountBtn.innerHTML = `<i class="fas fa-user-circle" style="color:var(--primary)"></i>`;
                 accountBtn.title = d.customer.name;

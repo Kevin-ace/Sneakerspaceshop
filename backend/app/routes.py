@@ -7,6 +7,7 @@ from flask import (render_template, url_for, flash, redirect, request,
 from app import db, bcrypt, limiter, csrf
 from app.models import Product, Admin, Customer, Order, OrderItem, Offer, ContactMessage, ChatMessage
 from app.forms import LoginForm, ProductForm, CustomerRegisterForm, CustomerLoginForm
+from flask_wtf.csrf import CSRFError, CSRFProtect
 from functools import wraps
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta, timezone
@@ -131,6 +132,41 @@ def add_security_headers(response):
 @bp.after_request
 def apply_security_headers(response):
     return add_security_headers(response)
+
+# ================================
+# GLOBAL JSON ERROR HANDLERS FOR API
+# ================================
+
+@bp.app_errorhandler(400)
+def handle_400(e):
+    if request.path.startswith('/api/') or request.path.startswith('/admin/api/'):
+        description = getattr(e, 'description', 'Bad request')
+        return jsonify({'error': str(description)}), 400
+    return e
+
+@bp.app_errorhandler(404)
+def handle_404(e):
+    if request.path.startswith('/api/') or request.path.startswith('/admin/api/'):
+        return jsonify({'error': 'Resource not found'}), 404
+    return e
+
+@bp.app_errorhandler(429)
+def handle_429(e):
+    if request.path.startswith('/api/') or request.path.startswith('/admin/api/'):
+        return jsonify({'error': 'Too many requests. Please try again in a minute.'}), 429
+    return e
+
+@bp.app_errorhandler(500)
+def handle_500(e):
+    if request.path.startswith('/api/') or request.path.startswith('/admin/api/'):
+        return jsonify({'error': 'Internal server error. Please try again later.'}), 500
+    return e
+
+@bp.app_errorhandler(CSRFError)
+def handle_csrf_error(e):
+    if request.path.startswith('/api/') or request.path.startswith('/admin/api/'):
+        return jsonify({'error': 'CSRF token missing or invalid'}), 400
+    return getattr(e, 'description', 'CSRF validation failed'), 400
 
 # ================================
 # SEO UTILITIES
@@ -313,6 +349,7 @@ def api_homepage_offer():
 # ================================
 
 @bp.route('/api/checkout', methods=['POST'])
+@csrf.exempt
 @limiter.limit("10 per minute")
 def api_checkout():
     """Create an order from the cart. Requires customer login."""
@@ -382,6 +419,7 @@ def api_checkout():
 # ================================
 
 @bp.route('/api/contact', methods=['POST'])
+@csrf.exempt
 @limiter.limit("5 per minute")
 def api_contact():
     """Submit a contact form message."""
@@ -670,12 +708,14 @@ def admin_offers():
     return render_template('admin/offers.html', title='Offers', offers=offers)
 
 @bp.route('/admin/api/offers', methods=['GET'])
+@csrf.exempt
 @login_required
 def api_get_offers():
     offers = Offer.query.order_by(Offer.created_at.desc()).all()
     return jsonify([sanitize_output(o.to_dict()) for o in offers])
 
 @bp.route('/admin/api/offers', methods=['POST'])
+@csrf.exempt
 @login_required
 def api_create_offer():
     data = request.get_json()
@@ -710,6 +750,7 @@ def api_create_offer():
     return jsonify(sanitize_output(offer.to_dict())), 201
 
 @bp.route('/admin/api/offers/<int:offer_id>', methods=['DELETE'])
+@csrf.exempt
 @login_required
 def api_delete_offer(offer_id):
     offer = Offer.query.get_or_404(offer_id)
@@ -718,6 +759,7 @@ def api_delete_offer(offer_id):
     return jsonify({'message': 'Offer deleted'})
 
 @bp.route('/admin/api/offers/<int:offer_id>/toggle', methods=['POST'])
+@csrf.exempt
 @login_required
 def api_toggle_offer(offer_id):
     offer = Offer.query.get_or_404(offer_id)
@@ -746,6 +788,7 @@ def admin_storefront():
                          active_offers=active_offers)
 
 @bp.route('/admin/api/products/<int:product_id>/toggle-trending', methods=['POST'])
+@csrf.exempt
 @login_required
 @admin_required
 def api_toggle_trending(product_id):
@@ -756,6 +799,7 @@ def api_toggle_trending(product_id):
     return jsonify(sanitize_output(product.to_dict()))
 
 @bp.route('/admin/api/products/<int:product_id>/toggle-new-arrival', methods=['POST'])
+@csrf.exempt
 @login_required
 @admin_required
 def api_toggle_new_arrival(product_id):
@@ -766,6 +810,7 @@ def api_toggle_new_arrival(product_id):
     return jsonify(sanitize_output(product.to_dict()))
 
 @bp.route('/admin/api/offers/<int:offer_id>/set-homepage-banner', methods=['POST'])
+@csrf.exempt
 @login_required
 @admin_required
 def api_set_homepage_banner(offer_id):
@@ -779,6 +824,7 @@ def api_set_homepage_banner(offer_id):
     return jsonify(sanitize_output(offer.to_dict()))
 
 @bp.route('/admin/api/offers/clear-homepage-banner', methods=['POST'])
+@csrf.exempt
 @login_required
 @admin_required
 def api_clear_homepage_banner():
@@ -798,6 +844,7 @@ def admin_orders():
     return render_template('admin/orders.html', title='Orders', orders=orders)
 
 @bp.route('/admin/api/orders/<int:order_id>/status', methods=['PUT'])
+@csrf.exempt
 @login_required
 def api_update_order_status(order_id):
     order = Order.query.get_or_404(order_id)
@@ -842,6 +889,7 @@ def admin_messages():
     return render_template('admin/messages.html', title='Messages', messages=messages)
 
 @bp.route('/admin/api/messages/<int:message_id>/read', methods=['POST'])
+@csrf.exempt
 @login_required
 def api_mark_message_read(message_id):
     msg = ContactMessage.query.get_or_404(message_id)
@@ -850,6 +898,7 @@ def api_mark_message_read(message_id):
     return jsonify({'message': 'Marked as read'})
 
 @bp.route('/admin/api/messages/<int:message_id>', methods=['DELETE'])
+@csrf.exempt
 @login_required
 def api_delete_message(message_id):
     msg = ContactMessage.query.get_or_404(message_id)
@@ -901,6 +950,7 @@ def api_auth_status():
     return jsonify({'logged_in': False})
 
 @bp.route('/api/auth/register', methods=['POST'])
+@csrf.exempt
 @limiter.limit("5 per minute")
 def api_register():
     """Register a new customer."""
@@ -930,6 +980,7 @@ def api_register():
     return jsonify({'message': 'Account created!', 'customer': customer.to_dict()}), 201
 
 @bp.route('/api/auth/login', methods=['POST'])
+@csrf.exempt
 @limiter.limit("10 per minute")
 def api_customer_login():
     """Login a customer via JSON API."""
@@ -947,6 +998,7 @@ def api_customer_login():
     return jsonify({'error': 'Invalid email or password'}), 401
 
 @bp.route('/api/auth/logout', methods=['POST'])
+@csrf.exempt
 def api_customer_logout():
     """Logout customer."""
     logout_user()
@@ -1013,6 +1065,7 @@ def api_chat_messages(order_id):
     return jsonify([sanitize_output(m.to_dict()) for m in messages])
 
 @bp.route('/api/chat/<int:order_id>/send', methods=['POST'])
+@csrf.exempt
 def api_chat_send(order_id):
     """Send a chat message."""
     if not current_user.is_authenticated:
@@ -1045,6 +1098,7 @@ def api_chat_send(order_id):
     return jsonify(sanitize_output(msg.to_dict())), 201
 
 @bp.route('/api/chat/<int:order_id>/upload', methods=['POST'])
+@csrf.exempt
 def api_chat_upload(order_id):
     """Upload an image in chat."""
     if not current_user.is_authenticated:

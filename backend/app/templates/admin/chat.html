@@ -84,7 +84,9 @@
         try {
             const r = await fetch(`/api/chat/${ORDER_ID}/messages`);
             if (!r.ok) return;
-            const msgs = await r.json();
+            let msgs = null;
+            try { msgs = await r.json(); } catch(e) { return; }
+            if (!Array.isArray(msgs)) return;
             if (msgs.length === lastCount) return;
             lastCount = msgs.length;
             const box = document.getElementById('chatBox');

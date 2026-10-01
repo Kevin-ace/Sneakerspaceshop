@@ -215,8 +215,11 @@
         try {
             // Load stats including pie data
             const statsRes = await fetch('/admin/api/stats');
-            const stats = await statsRes.json();
-            
+            if (!statsRes.ok) return;
+            let stats = null;
+            try { stats = await statsRes.json(); } catch(e) {}
+            if (!stats || !stats.pie_data) return;
+
             // Render Pie Chart
             const pieCtx = document.getElementById('inventoryPieChart').getContext('2d');
             new Chart(pieCtx, {
@@ -257,7 +260,10 @@
 
             // Load Sales Chart data
             const salesRes = await fetch('/admin/api/sales-chart');
-            const salesData = await salesRes.json();
+            if (!salesRes.ok) return;
+            let salesData = null;
+            try { salesData = await salesRes.json(); } catch(e) {}
+            if (!salesData) return;
 
             const lineCtx = document.getElementById('salesChart').getContext('2d');
             new Chart(lineCtx, {

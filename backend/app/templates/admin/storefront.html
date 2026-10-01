@@ -258,8 +258,10 @@
     async function toggleTrending(productId, card) {
         try {
             const res = await fetch(`/admin/api/products/${productId}/toggle-trending`, { method: 'POST' });
-            if (!res.ok) throw new Error('Failed');
-            const product = await res.json();
+            if (!res.ok) throw new Error('Failed to toggle trending status');
+            let product = null;
+            try { product = await res.json(); } catch(e) {}
+            if (!product) throw new Error('Invalid response');
 
             card.classList.toggle('active', product.is_trending);
             const badge = card.querySelector('.toggle-badge');
@@ -277,8 +279,10 @@
     async function toggleNewArrival(productId, card) {
         try {
             const res = await fetch(`/admin/api/products/${productId}/toggle-new-arrival`, { method: 'POST' });
-            if (!res.ok) throw new Error('Failed');
-            const product = await res.json();
+            if (!res.ok) throw new Error('Failed to toggle new arrival status');
+            let product = null;
+            try { product = await res.json(); } catch(e) {}
+            if (!product) throw new Error('Invalid response');
 
             card.classList.toggle('active', product.is_new_arrival);
             const badge = card.querySelector('.toggle-badge');
